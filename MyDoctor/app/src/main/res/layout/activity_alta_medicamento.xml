@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AltaMedicamentoActivity"
+    tools:layout_editor_absoluteY="81dp">
+
+    <EditText
+        android:id="@+id/txt_nombre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:hint="@string/lbl_nombre"
+        app:layout_constraintBottom_toTopOf="@+id/txt_padecimiento"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/txt_padecimiento"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:hint="@string/lbl_padecimiento"
+        app:layout_constraintBottom_toTopOf="@+id/txt_fotoEnvase"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_nombre" />
+
+    <EditText
+        android:id="@+id/txt_fotoEnvase"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="13dp"
+        android:hint="@string/lbl_fotoEnvase"
+        app:layout_constraintBottom_toTopOf="@+id/txt_fotoMedicamento"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_padecimiento" />
+
+    <EditText
+        android:id="@+id/txt_fotoMedicamento"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:hint="@string/lbl_fotoMedicamento"
+        app:layout_constraintBottom_toTopOf="@+id/txt_horario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_fotoEnvase" />
+
+    <EditText
+        android:id="@+id/txt_horario"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:hint="@string/lbl_horario"
+        app:layout_constraintBottom_toTopOf="@+id/txt_dosis"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_fotoMedicamento" />
+
+    <EditText
+        android:id="@+id/txt_dosis"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="@string/lbl_dosis"
+        app:layout_constraintBottom_toTopOf="@+id/txt_periodo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_horario" />
+
+    <EditText
+        android:id="@+id/txt_periodo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:hint="@string/lbl_periodo"
+        app:layout_constraintBottom_toTopOf="@+id/txt_nombreDoctor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_dosis" />
+
+    <EditText
+        android:id="@+id/txt_nombreDoctor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/lbl_nombreDoctor"
+        app:layout_constraintBottom_toTopOf="@+id/buttonVerCalendario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_periodo" />
+
+    <Button
+        android:id="@+id/buttonVerCalendario"
+        android:layout_width="138dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="4dp"
+        android:onClick="onClickButton"
+        android:text="@string/btn_agregarMedicamento"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_nombreDoctor" />
+
+
+</android.support.constraint.ConstraintLayout>

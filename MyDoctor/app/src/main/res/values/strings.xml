@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">MyDoctor</string>
+    <!--Falta cambiar para las imagenes, horarios, fechas, por lo mientras esta en string -->
+    <string name="lbl_nombre">Nombre</string>
+    <string name="lbl_padecimiento">Padecimiento</string>
+    <string name="lbl_fotoEnvase">Foto Envase</string>
+    <string name="lbl_fotoMedicamento">Foto Medicamento</string>
+    <string name="lbl_horario">Horario</string>
+    <string name="lbl_dosis">Dosis</string>
+    <string name="lbl_periodo">Periodo</string>
+    <string name="lbl_nombreDoctor">Nombre Doctor</string>
+
+    <string name="btn_agregarMedicamento">Agregar</string>
+</resources>
