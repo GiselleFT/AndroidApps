@@ -16,7 +16,7 @@ public class Principal extends AppCompatActivity {
 
     //Metodo del boton Agregar medicamento
     public void agregarMedicamento(View view){
-        Intent intentAltaMedicamento = new Intent(this, AltaMedicamentoActivity.class);
+        Intent intentAltaMedicamento = new Intent(this, AgregarMedicamentoActivity.class);
         startActivity(intentAltaMedicamento);
     }
 
