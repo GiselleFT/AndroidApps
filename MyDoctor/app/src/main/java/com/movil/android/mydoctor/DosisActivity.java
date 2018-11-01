@@ -14,10 +14,10 @@ public class DosisActivity extends AppCompatActivity {
     }
 
     /*Al presionar el boton Aceptar
-    Regresa a AgregarMedicamentoActivity*/
-    public void aceptar(View v) {
-        Intent intentAceptar = new Intent(this, AgregarMedicamentoActivity.class);
-        startActivity(intentAceptar);
+    Muestra activity para tomar foto del envase del medicamento*/
+    public void continuar(View v) {
+        Intent intentContinuar = new Intent(this, FotoEnvaseActivity.class);
+        startActivity(intentContinuar);
     }
 
     /*Al presionar el boton Cancelar

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HorarioActivity">
+    tools:context=".HorarioActivity"
+    tools:layout_editor_absoluteY="81dp">
 
     <NumberPicker
         android:id="@+id/numberPickerDosis"
@@ -12,11 +13,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="108dp"
-        android:layout_marginLeft="108dp"
-        android:layout_marginTop="94dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="7dp"
+        app:layout_constraintStart_toStartOf="@+id/textViewHora"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHora" />
 
     <NumberPicker
         android:id="@+id/numberPickerMinuto"
@@ -24,10 +23,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="26dp"
-        android:layout_marginLeft="26dp"
-        app:layout_constraintStart_toEndOf="@+id/numberPickerDosis"
-        app:layout_constraintTop_toTopOf="@+id/numberPickerDosis" />
+        android:layout_marginTop="7dp"
+        app:layout_constraintEnd_toEndOf="@+id/textViewMinuto"
+        app:layout_constraintTop_toBottomOf="@+id/textViewMinuto" />
 
 
     <Button
@@ -36,14 +34,15 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/buttonCancelar"
         android:layout_alignBottom="@+id/buttonCancelar"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginEnd="21dp"
+        android:layout_marginRight="21dp"
         android:layout_toLeftOf="@+id/numberPickerDosis"
-        android:onClick="aceptar"
-        android:text="Aceptar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:onClick="continuar"
+        android:text="Continuar"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonCancelar"
+        app:layout_constraintEnd_toStartOf="@+id/buttonCancelar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/buttonCancelar" />
 
 
     <Button
@@ -51,44 +50,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/numberPickerDosis"
-        android:layout_marginEnd="57dp"
-        android:layout_marginRight="57dp"
-        android:layout_marginBottom="107dp"
+        android:layout_marginBottom="60dp"
         android:layout_toRightOf="@+id/numberPickerDosis"
         android:onClick="cancelar"
         android:text="Cancelar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonAceptar" />
 
     <TextView
         android:id="@+id/textViewHora"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginBottom="18dp"
-        android:text="Hora"
-        app:layout_constraintBottom_toTopOf="@+id/numberPickerDosis"
-        app:layout_constraintStart_toStartOf="@+id/numberPickerDosis" />
+        android:layout_marginTop="39dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:text="Hora(s)"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/textViewMinuto"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewRecordarCada" />
 
     <TextView
         android:id="@+id/textViewMinuto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="18dp"
-        android:text="Minuto"
-        app:layout_constraintBottom_toTopOf="@+id/numberPickerMinuto"
-        app:layout_constraintEnd_toEndOf="@+id/textViewRecordarCada"
-        app:layout_constraintStart_toEndOf="@+id/textViewRecordarCada" />
+        android:layout_marginBottom="7dp"
+        android:text="Minuto(s)"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/numberPickerDosis"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textViewHora" />
 
     <TextView
         android:id="@+id/textViewRecordarCada"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="17dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="41dp"
         android:text="Recordar cada:"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@+id/textViewHora"
         app:layout_constraintTop_toTopOf="parent" />
 

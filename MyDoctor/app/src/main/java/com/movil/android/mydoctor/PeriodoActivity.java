@@ -15,10 +15,10 @@ public class PeriodoActivity extends AppCompatActivity {
 
 
     /*Al presionar el boton Aceptar
-    Regresa a AgregarMedicamentoActivity*/
-    public void aceptar(View v) {
-        Intent intentAceptar = new Intent(this, AgregarMedicamentoActivity.class);
-        startActivity(intentAceptar);
+    Muestra activity para agregar la dosis a tomar del medicamento*/
+    public void continuar(View v) {
+        Intent intentContinuar = new Intent(this, DosisActivity.class);
+        startActivity(intentContinuar);
     }
 
     /*Al presionar el boton Cancelar

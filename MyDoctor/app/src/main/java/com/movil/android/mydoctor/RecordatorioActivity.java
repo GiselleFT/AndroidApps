@@ -13,7 +13,6 @@ public class RecordatorioActivity extends AppCompatActivity {
     private TimePicker timePickerRecordatorio;
     private Calendar calendar;
     private String format = "";
-    private TextView time;
 
 
     @Override
@@ -22,7 +21,6 @@ public class RecordatorioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recordatorio);
 
         timePickerRecordatorio = (TimePicker) findViewById(R.id.timePickerRecordatorio);
-        time = (TextView) findViewById(R.id.textView1);
         calendar = Calendar.getInstance();
 
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -50,19 +48,15 @@ public class RecordatorioActivity extends AppCompatActivity {
             format = "AM";
         }
 
-        time.setText(new StringBuilder().append(hour).append(" : ").append(min)
-                .append(" ").append(format));
-
         System.out.println(new StringBuilder().append(hour).append(" : ").append(min)
                 .append(" ").append(format));
     }
 
-
-    /*Al presionar el boton Aceptar
-    Regresa a AgregarMedicamentoActivity*/
-    public void aceptar(View v) {
-        Intent intentAceptar = new Intent(this, AgregarMedicamentoActivity.class);
-        startActivity(intentAceptar);
+    /*Al presionar el boton Continuar
+    Muestra activity del periodo que durará el tratamiento*/
+    public void continuar(View v) {
+        Intent intentContinuar = new Intent(this, PeriodoActivity.class);
+        startActivity(intentContinuar);
     }
 
     /*Al presionar el boton Cancelar
@@ -71,5 +65,8 @@ public class RecordatorioActivity extends AppCompatActivity {
         Intent intentCancelar = new Intent(this, AgregarMedicamentoActivity.class);
         startActivity(intentCancelar);
     }
+
+
+
 
 }

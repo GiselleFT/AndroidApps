@@ -14,11 +14,11 @@ public class HorarioActivity extends AppCompatActivity {
     }
 
 
-    /*Al presionar el boton Aceptar
-    Regresa a AgregarMedicamentoActivity*/
-    public void aceptar(View v) {
-        Intent intentAceptar = new Intent(this, AgregarMedicamentoActivity.class);
-        startActivity(intentAceptar);
+    /*Al presionar el boton Continuar
+    Manda a activity Hora inicio del primer recordatorio del día*/
+    public void continuar(View v) {
+        Intent intentContinuar = new Intent(this, RecordatorioActivity.class);
+        startActivity(intentContinuar);
     }
 
     /*Al presionar el boton Cancelar

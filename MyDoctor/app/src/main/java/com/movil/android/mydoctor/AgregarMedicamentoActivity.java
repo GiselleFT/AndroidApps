@@ -39,49 +39,12 @@ public class AgregarMedicamentoActivity extends AppCompatActivity {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
-    /*Al presionar el boton Horario
-    Muestra el selector de horario (numero de veces que se tomará el medicamento por día, cada cuanto tiempo en un dia)*/
-    public void muestraSelectorHorario(View v) {
-        Intent intentHorario = new Intent(this, HorarioActivity.class);
-        startActivity(intentHorario);
+    /*Al presionar el boton Continuar
+    Muestra activity del selector de Recordar cada (numero de veces que se tomará
+    el medicamento por día, cada cuanto tiempo en un dia)*/
+    public void continuar(View v) {
+        Intent intentContinuar = new Intent(this, HorarioActivity.class);
+        startActivity(intentContinuar);
     }
 
-
-    /*Al presionar el boton Recordatorio
-    Muestra el selector de recordatorio (Primera hora en la que se tiene que tomar o administrar)*/
-    public void muestraSelectorRecordatorio(View v) {
-        Intent intentRecordatorio = new Intent(this, RecordatorioActivity.class);
-        startActivity(intentRecordatorio);
-    }
-
-
-    /*Al presionar el boton Periodo
-    Muestra el selector de periodo (Duracion del tratamiento)*/
-    public void muestraSelectorPeriodo(View v) {
-        Intent intentPeriodo = new Intent(this, PeriodoActivity.class);
-        startActivity(intentPeriodo);
-    }
-
-
-    /*Al presionar el boton Dosis
-    Muestra el selector de dosis (miligramos o mililitros)*/
-    public void muestraSelectorDosis(View v) {
-        Intent intentDosis = new Intent(this, DosisActivity.class);
-        startActivity(intentDosis);
-    }
-
-    /*Al presionar el boton Foto Envase
-    Permite tomar la foto del envase del medicamento*/
-    public void tomaFotoEnvase(View v) {
-        Intent intentFotoEnvase = new Intent(this, FotoEnvaseActivity.class);
-        startActivity(intentFotoEnvase);
-    }
-
-
-    /*Al presionar el boton Foto Medicamento
-    Permite tomar la foto del medicamento*/
-    public void tomaFotoMedicamento(View v) {
-        Intent intentFotoMedicamento = new Intent(this, FotoMedicamentoActivity.class);
-        startActivity(intentFotoMedicamento);
-    }
 }

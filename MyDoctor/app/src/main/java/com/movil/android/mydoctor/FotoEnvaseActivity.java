@@ -94,4 +94,12 @@ public class FotoEnvaseActivity extends AppCompatActivity {
     }
 
 
+    /*Al presionar el boton Aceptar
+    Muestra activity para tomar foto del medicamento*/
+    public void continuar(View v) {
+        Intent intentContinuar = new Intent(this, FotoMedicamentoActivity.class);
+        startActivity(intentContinuar);
+    }
+
+
 }
