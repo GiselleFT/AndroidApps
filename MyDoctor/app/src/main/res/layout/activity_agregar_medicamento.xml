@@ -6,4 +6,109 @@
     android:layout_height="match_parent"
     tools:context=".AgregarMedicamentoActivity">
 
+    <EditText
+        android:id="@+id/txt_nombre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/lbl_nombre"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/buttonVerCalendario" />
+
+    <EditText
+        android:id="@+id/txt_padecimiento"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:hint="@string/lbl_padecimiento"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_nombre" />
+
+    <Button
+        android:id="@+id/buttonHorario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="14dp"
+        android:layout_marginRight="14dp"
+        android:onClick="muestraSelectorHorario"
+        android:text="Horario"
+        app:layout_constraintBottom_toTopOf="@+id/buttonRecordatorio"
+        app:layout_constraintEnd_toEndOf="@+id/buttonRecordatorio" />
+
+    <Button
+        android:id="@+id/buttonRecordatorio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="117dp"
+        android:layout_marginLeft="117dp"
+        android:onClick="muestraSelectorRecordatorio"
+        android:text="Recordatorio"
+        app:layout_constraintBottom_toTopOf="@+id/buttonPeriodo"
+        app:layout_constraintStart_toStartOf="@+id/txt_nombreDoctor" />
+
+
+    <EditText
+        android:id="@+id/txt_nombreDoctor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:hint="@string/lbl_nombreDoctor"
+        app:layout_constraintBottom_toTopOf="@+id/buttonHorario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonVerCalendario"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:onClick="onClickButton"
+        android:text="@string/btn_agregarMedicamento"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonHorario"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonPeriodo"
+        android:layout_width="102dp"
+        android:layout_height="wrap_content"
+        android:onClick="muestraSelectorPeriodo"
+        android:text="Periodo"
+        app:layout_constraintBottom_toTopOf="@+id/buttonDosis"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonDosis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="49dp"
+        android:onClick="muestraSelectorDosis"
+        android:text="Dosis"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/buttonPeriodo" />
+
+    <Button
+        android:id="@+id/buttonFotoEnvase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:onClick="tomaFotoEnvase"
+        android:text="Foto Envase"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_padecimiento" />
+
+    <Button
+        android:id="@+id/buttonFotoMedicamento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:text="FOTO MEDICAMENTO"
+        app:layout_constraintBottom_toTopOf="@+id/txt_nombreDoctor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
 </android.support.constraint.ConstraintLayout>
