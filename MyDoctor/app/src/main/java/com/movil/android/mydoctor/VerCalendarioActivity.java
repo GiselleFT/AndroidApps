@@ -15,6 +15,6 @@ public class VerCalendarioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ver_calendario);
 
         calendarView = (CalendarView)findViewById(R.id.calendarView);
-        
+
     }
 }

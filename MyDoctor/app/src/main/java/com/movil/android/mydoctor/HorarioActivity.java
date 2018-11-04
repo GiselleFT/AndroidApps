@@ -22,9 +22,10 @@ public class HorarioActivity extends AppCompatActivity {
     }
 
     /*Al presionar el boton Cancelar
-    Regresa a AgregarMedicamentoActivity*/
+        Regresa al menú principal, no se crea un registro en la BD
+    */
     public void cancelar(View v) {
-        Intent intentCancelar = new Intent(this, AgregarMedicamentoActivity.class);
+        Intent intentCancelar = new Intent(this, PrincipalActivity.class);
         startActivity(intentCancelar);
     }
 }

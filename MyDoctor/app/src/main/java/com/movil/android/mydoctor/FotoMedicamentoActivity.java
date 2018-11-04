@@ -99,4 +99,12 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
         Intent intentContinuar = new Intent(this, PrincipalActivity.class);
         startActivity(intentContinuar);
     }
+
+    /*Al presionar el boton Cancelar
+        Regresa al menú principal, no se crea un registro en la BD
+    */
+    public void cancelar(View v) {
+        Intent intentCancelar = new Intent(this, PrincipalActivity.class);
+        startActivity(intentCancelar);
+    }
 }
