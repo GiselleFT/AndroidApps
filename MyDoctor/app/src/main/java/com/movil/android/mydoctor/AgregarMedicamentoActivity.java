@@ -5,12 +5,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class AgregarMedicamentoActivity extends AppCompatActivity {
     public EditText txtNombre;
     public EditText txtPadecimiento;
     public EditText txtNombreDoctor;
+    ArrayList<String> datos=new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,18 +29,12 @@ public class AgregarMedicamentoActivity extends AppCompatActivity {
 
     /*Al presionar el boton Agregar*/
     public void onClickButton(View view){
-        String nombre = txtNombre.getText().toString();
-        String padecimiento = txtPadecimiento.getText().toString();
-        String fotoEnvase = txtNombre.getText().toString();
-        String fotoMedicamento = txtNombre.getText().toString();
-        String dosis = txtNombre.getText().toString();
-        String periodo = txtNombre.getText().toString();
-        String nombreDoctor = txtNombre.getText().toString();
 
-        String msg = "Nombre: " + nombre + " Padecimiento: " + padecimiento + " foto Envase: " + fotoEnvase
-                + "foto Medicamento: " + fotoMedicamento + " dosis: " + dosis
-                + "periodo: " + periodo + "Nombre doctor: " + nombreDoctor;
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+
+        //Toast.makeText(this, datos, Toast.LENGTH_SHORT).show();
+
+
+
     }
 
     /*Al presionar el boton Continuar
@@ -44,6 +42,15 @@ public class AgregarMedicamentoActivity extends AppCompatActivity {
     el medicamento por día, cada cuanto tiempo en un dia)*/
     public void continuar(View v) {
         Intent intentContinuar = new Intent(this, HorarioActivity.class);
+        String nombre = txtNombre.getText().toString();
+        datos.add(nombre);
+        String padecimiento = txtPadecimiento.getText().toString();
+        datos.add(padecimiento);
+        String nombreDoctor = txtNombreDoctor.getText().toString();
+        datos.add(nombreDoctor);
+        intentContinuar.putExtra("nombre",datos.get(0));
+        intentContinuar.putExtra("padecimiento",datos.get(1));
+        intentContinuar.putExtra("nombreDoctor",datos.get(2));
         startActivity(intentContinuar);
     }
 
