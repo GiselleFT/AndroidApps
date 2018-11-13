@@ -8,7 +8,7 @@
     tools:layout_editor_absoluteY="81dp">
 
     <NumberPicker
-        android:id="@+id/numberPickerDosis"
+        android:id="@+id/numberPickerHoras"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -63,25 +63,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="39dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginRight="30dp"
         android:text="Hora(s)"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/textViewMinuto"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textViewRecordarCada"
         app:layout_constraintTop_toBottomOf="@+id/textViewRecordarCada" />
 
     <TextView
         android:id="@+id/textViewMinuto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="27dp"
+        android:layout_marginLeft="27dp"
         android:layout_marginBottom="7dp"
         android:text="Minuto(s)"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/numberPickerDosis"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textViewHora" />
+        app:layout_constraintBottom_toTopOf="@+id/numberPickerHoras"
+        app:layout_constraintStart_toEndOf="@+id/numberPickerHoras" />
 
     <TextView
         android:id="@+id/textViewRecordarCada"
@@ -90,20 +87,18 @@
         android:layout_marginTop="41dp"
         android:text="Recordar cada:"
         android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="@+id/textViewHora"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/datos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="36dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.739" />
+        app:layout_constraintTop_toBottomOf="@+id/numberPickerHoras" />
 
 </android.support.constraint.ConstraintLayout>

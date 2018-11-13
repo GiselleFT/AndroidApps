@@ -20,7 +20,6 @@ public class AgregarMedicamentoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_medicamento);
-
         txtNombre = (EditText)findViewById(R.id.txt_nombre);
         txtPadecimiento = (EditText)findViewById(R.id.txt_padecimiento);
         txtNombreDoctor = (EditText)findViewById(R.id.txt_nombreDoctor);
