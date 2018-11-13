@@ -7,26 +7,23 @@
     tools:context=".AgregarMedicamentoActivity"
     tools:layout_editor_absoluteY="81dp">
 
+
     <EditText
         android:id="@+id/txt_nombre"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="237dp"
+        android:layout_marginTop="96dp"
         android:hint="@string/lbl_nombre"
-        app:layout_constraintBottom_toTopOf="@+id/buttonHorario"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonVerCalendario" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/txt_padecimiento"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
         android:hint="@string/lbl_padecimiento"
-        app:layout_constraintBottom_toTopOf="@+id/txt_nombreDoctor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_nombre" />
@@ -41,28 +38,26 @@
         android:onClick="continuar"
         android:text="Continuar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_nombre" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
     <EditText
         android:id="@+id/txt_nombreDoctor"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="56dp"
+        android:layout_marginTop="17dp"
         android:hint="@string/lbl_nombreDoctor"
-        app:layout_constraintBottom_toTopOf="@+id/buttonHorario"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_padecimiento" />
 
     <Button
         android:id="@+id/buttonVerCalendario"
         android:layout_width="142dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="139dp"
+        android:layout_height="1dp"
         android:onClick="onClickButton"
         android:text="@string/btn_agregarMedicamento"
-        app:layout_constraintBottom_toTopOf="@+id/txt_nombre"
+        app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -70,17 +65,12 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginBottom="16dp"
         android:text="Registra un medicamento"
         android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/txt_nombre"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.509"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/button3"
@@ -92,6 +82,30 @@
         android:onClick="cancelar"
         android:text="Cancelar"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextTelefonoDoctor"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="122dp"
+        android:layout_marginBottom="126dp"
+        android:ems="10"
+        android:hint="Telefono Doctor"
+        android:inputType="phone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txt_nombreDoctor" />
+
+    <EditText
+        android:id="@+id/txt_direccionDoctor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:hint="Direccion Doctor"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTelefonoDoctor"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
 
