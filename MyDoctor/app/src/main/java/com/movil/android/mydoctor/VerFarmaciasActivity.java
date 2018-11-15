@@ -32,13 +32,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class VerFarmaciasActivity extends FragmentActivity implements OnMapReadyCallback{
+
+public class VerFarmaciasActivity extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private Marker marcador;
     double lat = 0.0;
     double lng = 0.0;
     String mensaje1;
     String direccion = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,9 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        }
+    }
+
+
 
     /**
      * Manipulates the map once available.
@@ -80,7 +84,7 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
         }
     }
 
-   public void setLocation(Location loc){
+    public void setLocation(Location loc){
         if(loc.getLatitude() != 0.0 && loc.getLongitude() != 0.0){
             try{
                 Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -93,9 +97,7 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
                 e.printStackTrace();
             }
         }
-   }
-
-
+    }
 
     private void agregarMarcador(double lat, double lng) {
         LatLng coordenadas = new LatLng(lat, lng);
@@ -107,8 +109,8 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
                 .position(coordenadas)
                 .title("Ubicación Actual: " + direccion)
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
-        mMap.moveCamera(miUbicacion);
-        //mMap.animateCamera(miUbicacion);
+        //mMap.moveCamera(miUbicacion);
+        mMap.animateCamera(miUbicacion);
     }
 
     private void actualizarUbicacion(Location location) {
@@ -144,7 +146,9 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
 
         @Override
         public void onProviderDisabled(String provider) {
-
+            mensaje1 = ("GPS Desactivado");
+            locationStart();
+            mensaje();
         }
     };
 
@@ -154,7 +158,7 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
     private void miUbicacion() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                PETICION_PERMISO_LOCALIZACION);
+                    PETICION_PERMISO_LOCALIZACION);
             return;
         }
         else {
@@ -166,6 +170,7 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
 
 
     }
+
 
     public void mensaje(){
         Toast toast = Toast.makeText(this, mensaje1, Toast.LENGTH_LONG);
