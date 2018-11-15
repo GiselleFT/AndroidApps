@@ -9,6 +9,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -29,8 +30,22 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Locale;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class VerFarmaciasActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -41,6 +56,13 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
     String mensaje1;
     String direccion = "";
 
+    //Marcadores para las farmacias
+    private Marker[] placeMarkers;
+    //Por defecto la API de Google places devuelve 20
+    private final int MAX_PLACES = 20;
+    //Para configurar los detalles de los marcadores
+    private MarkerOptions[] places;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +72,8 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        placeMarkers = new Marker[MAX_PLACES];
 
     }
 
@@ -118,6 +142,16 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
             lat = location.getLatitude();
             lng = location.getLongitude();
             agregarMarcador(lat, lng);
+
+            /*Peticion lugar: Farmacias*/
+            String placesSearchStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
+                    "json?location="+lat+","+lng+
+                    "&radius=5000&sensor=true" +
+                    "&types=pharmacy"+
+                    "&key=AIzaSyBtQ6U2mlincuHxUzqOGRmZcPre9ZssesI";
+
+            new GetPlaces().execute(placesSearchStr);
+
         }
     }
 
@@ -165,7 +199,7 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             actualizarUbicacion(location);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1200,0, locListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000,0, locListener);
         }
 
 
@@ -177,4 +211,100 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
         toast.show();
     }
 
+
+    private class GetPlaces extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... placesURL) {
+            StringBuilder placesBuilder = new StringBuilder();
+
+            for (String placeSearchURL : placesURL){
+                HttpClient placesClient = new DefaultHttpClient();
+                try{
+                    HttpGet placesGet = new HttpGet(placeSearchURL);
+                    HttpResponse placesResponse = placesClient.execute(placesGet);
+                    StatusLine placeSearchStatus = placesResponse.getStatusLine();
+                    if(placeSearchStatus.getStatusCode() == 200){
+                        HttpEntity placesEntity = placesResponse.getEntity();
+                        InputStream placesContent = placesEntity.getContent();
+                        InputStreamReader placesInput = new InputStreamReader(placesContent);
+                        BufferedReader placesReader = new BufferedReader(placesInput);
+                        String lineIn;
+                        while((lineIn = placesReader.readLine()) != null){
+                            placesBuilder.append(lineIn);
+                        }
+
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            //retornar los datos JSON
+            return placesBuilder.toString();
+        }
+
+        protected void onPostExecute(String result){
+            //Eliminar marcadores antiguios, cada que se modifique la aubicacion actual
+            if(placeMarkers != null){
+                for (int pm = 0; pm<placeMarkers.length; pm++){
+                    if(placeMarkers[pm] != null){
+                        placeMarkers[pm].remove();
+                    }
+                }
+            }
+
+            try{
+                JSONObject resultObject = new JSONObject(result);
+                JSONArray placesArray = resultObject.getJSONArray("results");
+                //Se crea un marcador por cada tipo de lugar devuelto
+                places = new MarkerOptions[placesArray.length()];
+                for (int p=0; p<placesArray.length(); p++){
+                    boolean missingValue = false;
+                    //creacion de variables para cada aspecto de lugar que se requiere recuperar y pasarlas al marcador
+                    LatLng placeLL = null;
+                    String placeName ="";
+                    String vicinity = "";
+                    int currIcon = R.mipmap.ic_launcher;
+
+                    JSONObject placeObject = placesArray.getJSONObject(p);
+                    //se recupera lat y long (ubicacion)
+                    JSONObject loc = placeObject.getJSONObject("geometry").getJSONObject("location");
+                    placeLL = new LatLng(Double.valueOf(loc.getString("lat")),
+                                        Double.valueOf(loc.getString("lng")));
+                    //se obtiene el tipo de lugar
+                    JSONArray types = placeObject.getJSONArray("types");
+                    for (int t=0; t<types.length(); t++){
+                        String thisType = types.get(t).toString();
+                    }
+                    //recuperar datos de proximidad
+                    vicinity = placeObject.getString("vicinity");
+                    //recuperar nombre de lugar
+                    placeName = placeObject.getString("name");
+
+                    //creacion del marcador
+                    places[p] = new MarkerOptions()
+                            .position(placeLL)
+                            .title(placeName)
+                            .icon(BitmapDescriptorFactory.fromResource(currIcon))
+                            .snippet(vicinity);
+
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            //se recorre el conjunto de markeroptions, se instancia un marcador para cada uno
+            //agregandolo al mapa y almacenando una referencia en el arreglo
+            if(places != null && placeMarkers != null){
+                for (int p=0; p<places.length && p<placeMarkers.length; p++){
+                    if(places[p] != null){
+                        placeMarkers[p] = mMap.addMarker(places[p]);
+                    }
+                }
+            }
+        }
+    }
+
 }
+
