@@ -14,6 +14,8 @@ public class AgregarMedicamentoActivity extends AppCompatActivity {
     public EditText txtNombre;
     public EditText txtPadecimiento;
     public EditText txtNombreDoctor;
+    public EditText txtDireccionDoctor;
+    public EditText txtTelDoctor;
     ArrayList<String> datos=new ArrayList<String>();
 
     @Override
@@ -23,6 +25,8 @@ public class AgregarMedicamentoActivity extends AppCompatActivity {
         txtNombre = (EditText)findViewById(R.id.txt_nombre);
         txtPadecimiento = (EditText)findViewById(R.id.txt_padecimiento);
         txtNombreDoctor = (EditText)findViewById(R.id.txt_nombreDoctor);
+        txtDireccionDoctor = (EditText)findViewById(R.id.txt_direccionDoctor);
+        txtTelDoctor = (EditText)findViewById(R.id.editTextTelefonoDoctor);
     }
 
 
@@ -47,9 +51,15 @@ public class AgregarMedicamentoActivity extends AppCompatActivity {
         datos.add(padecimiento);
         String nombreDoctor = txtNombreDoctor.getText().toString();
         datos.add(nombreDoctor);
+        String direccionDoctor = txtDireccionDoctor.getText().toString();
+        datos.add(direccionDoctor);
+        String telDoctor = txtTelDoctor.getText().toString();
+        datos.add(telDoctor);
         intentContinuar.putExtra("nombre",datos.get(0));
         intentContinuar.putExtra("padecimiento",datos.get(1));
         intentContinuar.putExtra("nombreDoctor",datos.get(2));
+        intentContinuar.putExtra("direccionDoctor",datos.get(3));
+        intentContinuar.putExtra("telDoctor",datos.get(4));
         startActivity(intentContinuar);
     }
 

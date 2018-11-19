@@ -22,9 +22,16 @@ public class HorarioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_horario);
         datos = (TextView)findViewById(R.id.datos);
         String valor1 = getIntent().getStringExtra("nombre");
+        datosS.add(valor1);
         String valor2 = getIntent().getStringExtra("padecimiento");
+        datosS.add(valor2);
         String valor3 = getIntent().getStringExtra("nombreDoctor");
-        datos.setText(valor1+" - "+valor2+" - "+valor3);
+        datosS.add(valor3);
+        String valor4 = getIntent().getStringExtra("direccionDoctor");
+        datosS.add(valor4);
+        String valor5 = getIntent().getStringExtra("telDoctor");
+        datosS.add(valor5);
+        datos.setText(valor1+" - "+valor2+" - "+valor3+" - "+valor4+" - "+valor5);
         horas = (NumberPicker)findViewById(R.id.numberPickerHoras);
         minutos = (NumberPicker)findViewById(R.id.numberPickerMinuto);
     }
@@ -34,6 +41,17 @@ public class HorarioActivity extends AppCompatActivity {
     Manda a activity Hora inicio del primer recordatorio del día*/
     public void continuar(View v) {
         Intent intentContinuar = new Intent(this, RecordatorioActivity.class);
+        String horasS = String.valueOf(horas.getValue());
+        datosS.add(horasS);
+        String minutosS = String.valueOf(minutos.getValue());
+        datosS.add(minutosS);
+        intentContinuar.putExtra("nombre",datosS.get(0));
+        intentContinuar.putExtra("padecimiento",datosS.get(1));
+        intentContinuar.putExtra("nombreDoctor",datosS.get(2));
+        intentContinuar.putExtra("direccionDoctor",datosS.get(3));
+        intentContinuar.putExtra("telDoctor",datosS.get(4));
+        intentContinuar.putExtra("horas",datosS.get(5));
+        intentContinuar.putExtra("minutos",datosS.get(6));
         startActivity(intentContinuar);
     }
 
@@ -42,8 +60,6 @@ public class HorarioActivity extends AppCompatActivity {
     */
     public void cancelar(View v) {
         Intent intentCancelar = new Intent(this, PrincipalActivity.class);
-        String horasS = String.valueOf(horas.getValue());
-        String minutosS = String.valueOf(minutos.getValue());
 
         startActivity(intentCancelar);
     }

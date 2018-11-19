@@ -4,15 +4,20 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class RecordatorioActivity extends AppCompatActivity {
     private TimePicker timePickerRecordatorio;
     private Calendar calendar;
     private String format = "";
+    ArrayList<String> datosS = new ArrayList<String>();
+    int hour;
+    int min;
 
 
     @Override
@@ -23,9 +28,25 @@ public class RecordatorioActivity extends AppCompatActivity {
         timePickerRecordatorio = (TimePicker) findViewById(R.id.timePickerRecordatorio);
         calendar = Calendar.getInstance();
 
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int min = calendar.get(Calendar.MINUTE);
+        String valor1 = getIntent().getStringExtra("nombre");
+        datosS.add(valor1);
+        String valor2 = getIntent().getStringExtra("padecimiento");
+        datosS.add(valor2);
+        String valor3 = getIntent().getStringExtra("nombreDoctor");
+        datosS.add(valor3);
+        String valor4 = getIntent().getStringExtra("direccionDoctor");
+        datosS.add(valor4);
+        String valor5 = getIntent().getStringExtra("telDoctor");
+        datosS.add(valor5);
+        String valor6 = getIntent().getStringExtra("horas");
+        datosS.add(valor6);
+        String valor7 = getIntent().getStringExtra("minutos");
+        datosS.add(valor7);
+
+        hour = calendar.get(Calendar.HOUR_OF_DAY);
+        min = calendar.get(Calendar.MINUTE);
         showTime(hour, min);
+
     }
 
 
@@ -56,6 +77,19 @@ public class RecordatorioActivity extends AppCompatActivity {
     Muestra activity del periodo que durará el tratamiento*/
     public void continuar(View v) {
         Intent intentContinuar = new Intent(this, PeriodoActivity.class);
+        String hoursRecordatorio = String.valueOf(hour);
+        datosS.add(hoursRecordatorio);
+        String minRecordatorio = String.valueOf(min);
+        datosS.add(minRecordatorio);
+        intentContinuar.putExtra("nombre",datosS.get(0));
+        intentContinuar.putExtra("padecimiento",datosS.get(1));
+        intentContinuar.putExtra("nombreDoctor",datosS.get(2));
+        intentContinuar.putExtra("direccionDoctor",datosS.get(3));
+        intentContinuar.putExtra("telDoctor",datosS.get(4));
+        intentContinuar.putExtra("horas",datosS.get(5));
+        intentContinuar.putExtra("minutos",datosS.get(6));
+        intentContinuar.putExtra("horasRecordatorio",datosS.get(7));
+        intentContinuar.putExtra("minutosRecordatorio",datosS.get(8));
         startActivity(intentContinuar);
     }
 
