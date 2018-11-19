@@ -92,9 +92,9 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        //UiSettings uiSettings = mMap.getUiSettings();
-        //uiSettings.setZoomControlsEnabled(true);
-        //uiSettings.setMyLocationButtonEnabled(true);
+        UiSettings uiSettings = mMap.getUiSettings();
+        uiSettings.setZoomControlsEnabled(true);
+        uiSettings.setMyLocationButtonEnabled(true);
         miUbicacion();
     }
 
@@ -132,7 +132,7 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
         marcador = mMap.addMarker(new MarkerOptions()
                 .position(coordenadas)
                 .title("Ubicación Actual: " + direccion)
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
         //mMap.moveCamera(miUbicacion);
         mMap.animateCamera(miUbicacion);
     }
@@ -146,9 +146,10 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
             /*Peticion lugar: Farmacias*/
             String placesSearchStr = "https://maps.googleapis.com/maps/api/place/nearbysearch/" +
                     "json?location="+lat+","+lng+
-                    "&radius=5000&sensor=true" +
+                    "&radius=1000" +
                     "&types=pharmacy"+
-                    "&key=AIzaSyBtQ6U2mlincuHxUzqOGRmZcPre9ZssesI";
+                    "&key=AIzaSyDI6KfKErPFyeiR_aEVY4V35KNbJ6SN6Po"+
+                    "&sensor=true";
 
             new GetPlaces().execute(placesSearchStr);
 
@@ -224,6 +225,7 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
                     HttpGet placesGet = new HttpGet(placeSearchURL);
                     HttpResponse placesResponse = placesClient.execute(placesGet);
                     StatusLine placeSearchStatus = placesResponse.getStatusLine();
+                    Log.d("UBICACION", placeSearchStatus.getStatusCode() + "");
                     if(placeSearchStatus.getStatusCode() == 200){
                         HttpEntity placesEntity = placesResponse.getEntity();
                         InputStream placesContent = placesEntity.getContent();
@@ -241,6 +243,7 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
                 }
             }
             //retornar los datos JSON
+            Log.d("UBICACION", placesBuilder.toString());
             return placesBuilder.toString();
         }
 
@@ -265,7 +268,7 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
                     LatLng placeLL = null;
                     String placeName ="";
                     String vicinity = "";
-                    int currIcon = R.mipmap.ic_launcher;
+                    //int currIcon = R.mipmap.ic_launcher;
 
                     JSONObject placeObject = placesArray.getJSONObject(p);
                     //se recupera lat y long (ubicacion)
@@ -281,16 +284,18 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
                     vicinity = placeObject.getString("vicinity");
                     //recuperar nombre de lugar
                     placeName = placeObject.getString("name");
+                    Log.d("UBICACION", placeLL.toString());
 
                     //creacion del marcador
                     places[p] = new MarkerOptions()
                             .position(placeLL)
                             .title(placeName)
-                            .icon(BitmapDescriptorFactory.fromResource(currIcon))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
                             .snippet(vicinity);
 
                 }
             }catch (Exception e){
+                Log.d("UBICACION", "excepcion1");
                 e.printStackTrace();
             }
 
