@@ -32,8 +32,7 @@ public class HorarioActivity extends AppCompatActivity {
         String valor5 = getIntent().getStringExtra("telDoctor");
         datosS.add(valor5);
         datos.setText(valor1+" - "+valor2+" - "+valor3+" - "+valor4+" - "+valor5);
-        horas = (NumberPicker)findViewById(R.id.numberPickerHoras);
-        minutos = (NumberPicker)findViewById(R.id.numberPickerMinuto);
+
     }
 
 
@@ -41,6 +40,8 @@ public class HorarioActivity extends AppCompatActivity {
     Manda a activity Hora inicio del primer recordatorio del día*/
     public void continuar(View v) {
         Intent intentContinuar = new Intent(this, RecordatorioActivity.class);
+        horas = (NumberPicker)findViewById(R.id.numberPickerHoras);
+        minutos = (NumberPicker)findViewById(R.id.numberPickerMinuto);
         String horasS = String.valueOf(horas.getValue());
         datosS.add(horasS);
         String minutosS = String.valueOf(minutos.getValue());
