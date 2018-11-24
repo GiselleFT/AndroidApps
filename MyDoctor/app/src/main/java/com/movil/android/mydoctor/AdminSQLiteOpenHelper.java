@@ -12,6 +12,7 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase baseDeDatos) {
+        //baseDeDatos.execSQL("DROP TABLE IF EXISTS 'medicamento'");
         baseDeDatos.execSQL("create table doctor (iddoctor int primary key, nombre text, telefono text, direccion text)");
         baseDeDatos.execSQL("create table medicamento (" +
                 "idMedicamento int primary key, " +
@@ -27,7 +28,8 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper{
                 "dosis text," +
                 "fotoEnvase text," +
                 "fotoMedicamento text," +
-                "iddoctor int)");
+                "iddoctor int," +
+                "fechaActual date)");
     }
 
     @Override

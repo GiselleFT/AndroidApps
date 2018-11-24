@@ -1,8 +1,12 @@
 package com.movil.android.mydoctor;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
@@ -33,6 +37,9 @@ public class FotoEnvaseActivity extends AppCompatActivity {
     String fotoEnvase;
     int banderaFotoCargada = 0;
     Context contexto = this;
+    public int banderaCambio;
+    public int tomoFoto;
+    String idS;
 
 
     @Override
@@ -43,10 +50,29 @@ public class FotoEnvaseActivity extends AppCompatActivity {
         Button button = (Button) findViewById(R.id.buttonTomarFoto);
         img = (ImageView) findViewById(R.id.imageView);
         imagen = button;
+        idS = getIntent().getStringExtra("medicamentoId");
+        System.out.println("IDS---------------------"+idS);
+        if (idS!=null){
+            AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"myDoctorBD2",null,1);
+            SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
+            Cursor medicamento = baseDeDatos.rawQuery("select * from medicamento where idMedicamento = "+idS+";",null);
+            if (medicamento.moveToFirst()){
+                String nombreImg = medicamento.getString(11);
+                System.out.println(nombreImg);
+                Bitmap image = BitmapFactory.decodeFile((new File("/storage/emulated/0/Android/data/com.movil.android.mydoctor/files/Pictures/"+nombreImg)).getAbsolutePath());
+                img.setImageBitmap(image);
+            }
+            banderaCambio=1;
+        }
+
+
+
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                tomoFoto=1;
                 //startActivityForResult(intent, 0);
                 // Ensure that there's a camera activity to handle the intent
                 if (intent.resolveActivity(getPackageManager()) != null) {
@@ -57,6 +83,7 @@ public class FotoEnvaseActivity extends AppCompatActivity {
                         photoFile = createImageFile();
                     } catch (IOException ex) {
                         // Error occurred while creating the File
+                        System.out.println(ex);
                     }
                     // Continue only if the File was successfully created
                     if (photoFile != null) {
@@ -65,6 +92,7 @@ public class FotoEnvaseActivity extends AppCompatActivity {
                                 photoFile);
                         fotoEnvase = photoFile.getName();// checa esto porque guarda con otros nombres
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                        addImageToGallery(photoFile.getAbsolutePath(),contexto);
                         startActivityForResult(intent, 1);
                     }
                 }
@@ -72,6 +100,14 @@ public class FotoEnvaseActivity extends AppCompatActivity {
         });
     }
 
+    public static void addImageToGallery(final String filePath, final Context context) {
+
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(filePath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        context.sendBroadcast(mediaScanIntent);
+    }
 
 
 
@@ -83,16 +119,20 @@ public class FotoEnvaseActivity extends AppCompatActivity {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "Envase_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);///storage/emulated/0/Pictures/Mydoctor
+        File f = new File(Environment.getExternalStorageDirectory()+"/Pictures/Mydoctor");
+        System.out.println(f.getAbsolutePath()+" --------- DIRECTORIO");
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
+        System.out.println(image.getAbsolutePath()); // /storage/emulated/0/Android/data/com.movil.android.mydoctor/files/Pictures/Envase_20181124_132750_3030207602995301149.jpg
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
+
 
 
     //Para mostrar la vista previa de la foto tomada en un image view
@@ -117,7 +157,7 @@ public class FotoEnvaseActivity extends AppCompatActivity {
     /*Al presionar el boton Aceptar
     Muestra activity para tomar foto del medicamento*/
     public void continuar(View v) {
-        if (banderaFotoCargada==1) {
+        if (banderaFotoCargada==1 || idS!=null) {
             Intent intentContinuar = new Intent(this, FotoMedicamentoActivity.class);
             String valor1 = getIntent().getStringExtra("nombre");
             datosS.add(valor1);
@@ -145,7 +185,17 @@ public class FotoEnvaseActivity extends AppCompatActivity {
             datosS.add(valor12);
             String valor13 = getIntent().getStringExtra("dosis");
             datosS.add(valor13);
-            String valor14 = fotoEnvase;
+            String valor14 = null;
+            if (tomoFoto!=1){
+                AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"myDoctorBD2",null,1);
+                SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
+                Cursor medicamento = baseDeDatos.rawQuery("select * from medicamento where idMedicamento = "+idS+";",null);
+                if (medicamento.moveToFirst()) {
+                    valor14 = medicamento.getString(11);
+                }
+            }else{
+                valor14 = fotoEnvase;
+            }
             datosS.add(valor14);
             System.out.println("**************************** VISTA DOSIS *************************");
             for (int i = 0; i < datosS.size(); i++) {
@@ -166,6 +216,9 @@ public class FotoEnvaseActivity extends AppCompatActivity {
             intentContinuar.putExtra("numeroDosis", datosS.get(11));
             intentContinuar.putExtra("dosis", datosS.get(12));
             intentContinuar.putExtra("fotoEnvase", datosS.get(13));
+            if (banderaCambio==1){
+                intentContinuar.putExtra("medicamentoId",idS);
+            }
             startActivity(intentContinuar);
         }else{
             Toast.makeText(this, "¡No has cargado ninguna imagen!", Toast.LENGTH_SHORT).show();
@@ -181,6 +234,7 @@ public class FotoEnvaseActivity extends AppCompatActivity {
     }
 
     //-------------------------------------------------------------------------------------------------------------------------------
+
     private Context TheThis;
 
     public void SaveImage(Context context, Bitmap ImageToSave) throws IOException {

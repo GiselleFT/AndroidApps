@@ -60,7 +60,7 @@ public class MedicamentosAdapter extends RecyclerView.Adapter<MedicamentosAdapte
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity,VerMedicamentosActivity.class);
-                AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(activity,"mydoctorBD",null,1);
+                AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(activity,"myDoctorBD2",null,1);
                 SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
                 int cantidad = baseDeDatos.delete("medicamento","idmedicamento="+medicamentoModel.getIdMedicamento(),null);
                 activity.startActivity(intent);

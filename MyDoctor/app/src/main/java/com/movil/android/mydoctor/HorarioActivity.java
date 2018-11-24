@@ -24,7 +24,6 @@ public class HorarioActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_horario);
-        datos = (TextView)findViewById(R.id.datos);
         String valor1 = getIntent().getStringExtra("nombre");
         datosS.add(valor1);
         String valor2 = getIntent().getStringExtra("padecimiento");
@@ -42,7 +41,7 @@ public class HorarioActivity extends AppCompatActivity {
         idS = getIntent().getStringExtra("medicamentoId");
         System.out.println("IDS---------------------"+idS);
         if (idS!=null){
-            AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"mydoctorBD",null,1);
+            AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"myDoctorBD2",null,1);
             SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
             Cursor medicamento = baseDeDatos.rawQuery("select * from medicamento where idMedicamento = "+idS+";",null);
             if (medicamento.moveToFirst()){

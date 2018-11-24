@@ -54,7 +54,7 @@ public class RecordatorioActivity extends AppCompatActivity {
         idS = getIntent().getStringExtra("medicamentoId");
         System.out.println("IDS---------------------"+idS);
         if (idS!=null){
-            AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"mydoctorBD",null,1);
+            AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"myDoctorBD2",null,1);
             SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
             Cursor medicamento = baseDeDatos.rawQuery("select * from medicamento where idMedicamento = "+idS+";",null);
             if (medicamento.moveToFirst()){

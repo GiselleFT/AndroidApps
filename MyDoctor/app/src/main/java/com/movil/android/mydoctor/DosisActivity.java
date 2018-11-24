@@ -30,13 +30,13 @@ public class DosisActivity extends AppCompatActivity {
         idS = getIntent().getStringExtra("medicamentoId");
         System.out.println("IDS---------------------"+idS);
         if (idS!=null){
-            AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"mydoctorBD",null,1);
+            AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"myDoctorBD2",null,1);
             SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
             Cursor medicamento = baseDeDatos.rawQuery("select * from medicamento where idMedicamento = "+idS+";",null);
             if (medicamento.moveToFirst()){
                 numberPickerDosis.setValue(Integer.valueOf(medicamento.getString(9)));
                 int opcion;
-                if (medicamento.getString(8).startsWith("milig")){
+                if (medicamento.getString(10).startsWith("milig")){
                     opcion=0;
                 }
                 else{

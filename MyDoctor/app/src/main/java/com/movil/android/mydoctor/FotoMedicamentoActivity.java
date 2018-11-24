@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +39,9 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
     String fotoMedicamento;
     int banderaFotoCargada = 0;
     Context contexto = this;
+    public int banderaCambio;
+    public int tomoFoto;
+    String idS;
 
 
     @Override
@@ -47,10 +52,27 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
         Button button = (Button) findViewById(R.id.buttonTomarFoto);
         img = (ImageView) findViewById(R.id.imageView);
         imagen = button;
+        idS = getIntent().getStringExtra("medicamentoId");
+        System.out.println("IDS---------------------"+idS);
+        if (idS!=null){
+            AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"myDoctorBD2",null,1);
+            SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
+            Cursor medicamento = baseDeDatos.rawQuery("select * from medicamento where idMedicamento = "+idS+";",null);
+            if (medicamento.moveToFirst()){
+                String todojunto = medicamento.getString(12);
+                String[] todoseparado = todojunto.split(",");
+                String nombreImg = todoseparado[0];
+                System.out.println(nombreImg);
+                Bitmap image = BitmapFactory.decodeFile((new File("/storage/emulated/0/Android/data/com.movil.android.mydoctor/files/Pictures/"+nombreImg)).getAbsolutePath());
+                img.setImageBitmap(image);
+            }
+            banderaCambio=1;
+        }
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                tomoFoto = 1;
                 //startActivityForResult(intent, 0);
                 // Ensure that there's a camera activity to handle the intent
                 if (intent.resolveActivity(getPackageManager()) != null) {
@@ -61,6 +83,7 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
                         photoFile = createImageFile();
                     } catch (IOException ex) {
                         // Error occurred while creating the File
+                        System.out.println(ex);
                     }
                     // Continue only if the File was successfully created
                     if (photoFile != null) {
@@ -69,6 +92,7 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
                                 photoFile);
                         fotoMedicamento = photoFile.getName();// checa esto porque guarda con otros nombres
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                        addImageToGallery(photoFile.getAbsolutePath(),contexto);
                         startActivityForResult(intent, 1);
                     }
                 }
@@ -77,6 +101,14 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
     }
 
 
+    public static void addImageToGallery(final String filePath, final Context context) {
+
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(filePath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        context.sendBroadcast(mediaScanIntent);
+    }
 
 
     //Metodo para crear un nombre unico de cada fotografia
@@ -87,12 +119,15 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "Medicamento_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);///storage/emulated/0/Pictures/Mydoctor
+        File f = new File(Environment.getExternalStorageDirectory()+"/Pictures/Mydoctor");
+        System.out.println(f.getAbsolutePath()+" --------- DIRECTORIO");
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
+        System.out.println(image.getAbsolutePath()); // /storage/emulated/0/Android/data/com.movil.android.mydoctor/files/Pictures/Envase_20181124_132750_3030207602995301149.jpg
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
@@ -122,7 +157,7 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
     /*Al presionar el boton Aceptar
     Muestra activity para tomar foto del medicamento*/
     public void continuar(View v) {
-        if (banderaFotoCargada==1) {
+        if (banderaFotoCargada==1  || idS!=null) {
             Intent intentContinuar = new Intent(this, PrincipalActivity.class);
             String valor1 = getIntent().getStringExtra("nombre");
             datosS.add(valor1);
@@ -152,75 +187,153 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
             datosS.add(valor13);
             String valor14 = getIntent().getStringExtra("fotoEnvase");
             datosS.add(valor14);
-            String valor15 = fotoMedicamento;
+            String valor15 = null;
+
             datosS.add(valor15);
             System.out.println("**************************** VISTA DOSIS *************************");
             int bandera=1;
-            for (int i = 0; i < datosS.size(); i++) {
+            for (int i = 0; i < datosS.size()-1; i++) {
                 if (!(datosS.get(i).length()>0)){
                     bandera=0;
                 }
                 System.out.println(i + "   ------   " + datosS.get(i));
             }
-            //------------ALTA-----------------------
-            AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"mydoctorBD",null,1);
-            SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
-            if (bandera==1){
-                ContentValues registro = new ContentValues();
-                //--------------------BUSCA DOCTOR------------
-                Cursor doctor = baseDeDatos.rawQuery("select iddoctor from doctor where nombre = '"+valor3+"' and direccion = '"+valor4+"';",null);
-                int idD;
-                if (doctor.moveToFirst()){
-                    idD=Integer.valueOf(doctor.getString(0));
-                    Toast.makeText(this, "¡Existe docto!", Toast.LENGTH_SHORT).show();
-                }else{
-                    Cursor fila2 = baseDeDatos.rawQuery("select iddoctor from doctor;",null);
-                    int id2;
-                    if (fila2.moveToLast()){
-                        id2=Integer.valueOf(fila2.getString(0))+1;
+            if (banderaCambio==1){
+                intentContinuar.putExtra("medicamentoId",idS);
+                AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"myDoctorBD2",null,1);
+                SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
+                if (bandera==1){
+                    ContentValues registro = new ContentValues();
+                    //--------------------BUSCA DOCTOR------------
+                    Cursor doctor = baseDeDatos.rawQuery("select iddoctor from doctor where nombre = '"+valor3+"' and direccion = '"+valor4+"' and telefono = '"+valor5+"';",null);
+                    int idD;
+                    if (doctor.moveToFirst()){
+                        idD=Integer.valueOf(doctor.getString(0));
+                        //Toast.makeText(this, "¡Existe doctor!", Toast.LENGTH_SHORT).show();
                     }else{
-                        id2=1;
+                        Cursor fila2 = baseDeDatos.rawQuery("select iddoctor from doctor;",null);
+                        int id2;
+                        if (fila2.moveToLast()){
+                            id2=Integer.valueOf(fila2.getString(0))+1;
+                        }else{
+                            id2=1;
+                        }
+                        //-------------------------ADJUNTA DOCTOR ----------------------------------
+                        registro.put("iddoctor", id2);//DOCTOR
+                        registro.put("nombre", valor3);
+                        registro.put("telefono", valor5);
+                        registro.put("direccion", valor4);
+                        baseDeDatos.insert("doctor", null, registro);
+                        idD=id2;
+                        //Toast.makeText(this, "¡No existe doctor y cree id!", Toast.LENGTH_SHORT).show();
                     }
-                    //-------------------------ADJUNTA DOCTOR ----------------------------------
-                    registro.put("iddoctor", id2);//DOCTOR
-                    registro.put("nombre", valor3);
-                    registro.put("telefono", valor5);
-                    registro.put("direccion", valor4);
-                    baseDeDatos.insert("doctor", null, registro);
-                    idD=id2;
-                    Toast.makeText(this, "¡No existe doctor y cree id!", Toast.LENGTH_SHORT).show();
-                }
-                //--------------CONSULTA NUEVO ID MEDICAMENTO---------------------
-                Cursor fila = baseDeDatos.rawQuery("select idMedicamento from medicamento;",null);
-                int id=0;
-                if (fila.moveToLast()){
-                    id=Integer.valueOf(fila.getString(0))+1;
+                    //--------------CONSULTA NUEVO ID MEDICAMENTO---------------------
+                    Cursor fila = baseDeDatos.rawQuery("select idMedicamento from medicamento where idMedicamento='"+idS+"';",null);
+                    int id=Integer.valueOf(idS);
+                    //-------------------------ADJUNTA MEDICAMENTO ----------------------------------
+                    registro = new ContentValues();
+                    registro.put("idMedicamento", id);
+                    registro.put("nombre", valor1);
+                    registro.put("padecimiento", valor2);
+                    registro.put("horas", Integer.valueOf(valor6));
+                    registro.put("minutos", Integer.valueOf(valor7));
+                    registro.put("horasRecordatorio", Integer.valueOf(valor8));
+                    registro.put("minutosRecordatorio", Integer.valueOf(valor9));
+                    registro.put("numeroPeriodo", Integer.valueOf(valor10));
+                    registro.put("periodo", valor11);
+                    registro.put("numeroDosis", Integer.valueOf(valor12));
+                    registro.put("dosis", valor13);
+                    registro.put("fotoEnvase", valor14);
+                    if (tomoFoto!=1){
+                        admin = new AdminSQLiteOpenHelper(this,"myDoctorBD2",null,1);
+                        baseDeDatos = admin.getReadableDatabase();
+                        Cursor medicamento = baseDeDatos.rawQuery("select * from medicamento where idMedicamento = "+idS+";",null);
+                        if (medicamento.moveToFirst()) {
+                            String todojunto = medicamento.getString(12);
+                            String[] todoseparado = todojunto.split(",");
+                            Date date = new Date();
+                            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                            System.out.println("Fecha: "+dateFormat.format(date));
+                            valor15 = todoseparado[0]+","+dateFormat.format(date);
+                        }
+                    }else{
+                        Date date = new Date();
+                        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                        System.out.println("Fecha: "+dateFormat.format(date));
+                        valor15 = fotoMedicamento+","+dateFormat.format(date);
+                    }
+                    registro.put("fotoMedicamento", valor15);
+                    registro.put("iddoctor", idD);
+                    //registro.put("fechaActual",fila.getString(14));
+                    baseDeDatos.update("medicamento",registro,"idMedicamento="+id, null);
+                    baseDeDatos.close();
+                    Toast.makeText(this, "¡Modificacion exitosa!", Toast.LENGTH_SHORT).show();
                 }else{
-                    id=1;
+                    Toast.makeText(this, "¡No completaste todos los campos, registro fallido!", Toast.LENGTH_SHORT).show();
                 }
-                //-------------------------ADJUNTA MEDICAMENTO ----------------------------------
-                registro = new ContentValues();
-                registro.put("idMedicamento", id);
-                registro.put("nombre", valor1);
-                registro.put("padecimiento", valor2);
-                registro.put("horas", Integer.valueOf(valor6));
-                registro.put("minutos", Integer.valueOf(valor7));
-                registro.put("horasRecordatorio", Integer.valueOf(valor8));
-                registro.put("minutosRecordatorio", Integer.valueOf(valor9));
-                registro.put("numeroPeriodo", Integer.valueOf(valor10));
-                registro.put("periodo", valor11);
-                registro.put("numeroDosis", Integer.valueOf(valor12));
-                registro.put("dosis", valor13);
-                registro.put("fotoEnvase", valor14);
-                registro.put("fotoMedicamento", valor15);
-                registro.put("iddoctor", idD);
-                baseDeDatos.insert("medicamento", null, registro);
-                baseDeDatos.close();
-                Toast.makeText(this, "¡Registro exitoso!", Toast.LENGTH_SHORT).show();
             }else{
-                Toast.makeText(this, "¡No completaste todos los campos, registro fallido!", Toast.LENGTH_SHORT).show();
+                //------------ALTA-----------------------
+                AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"myDoctorBD2",null,1);
+                SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
+                if (bandera==1){
+                    ContentValues registro = new ContentValues();
+                    //--------------------BUSCA DOCTOR------------
+                    Cursor doctor = baseDeDatos.rawQuery("select iddoctor from doctor where nombre = '"+valor3+"' and direccion = '"+valor4+"' and telefono = '"+valor5+"';",null);
+                    int idD;
+                    if (doctor.moveToFirst()){
+                        idD=Integer.valueOf(doctor.getString(0));
+                        Toast.makeText(this, "¡Existe doctor!", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Cursor fila2 = baseDeDatos.rawQuery("select iddoctor from doctor;",null);
+                        int id2;
+                        if (fila2.moveToLast()){
+                            id2=Integer.valueOf(fila2.getString(0))+1;
+                        }else{
+                            id2=1;
+                        }
+                        //-------------------------ADJUNTA DOCTOR ----------------------------------
+                        registro.put("iddoctor", id2);//DOCTOR
+                        registro.put("nombre", valor3);
+                        registro.put("telefono", valor5);
+                        registro.put("direccion", valor4);
+                        baseDeDatos.insert("doctor", null, registro);
+                        idD=id2;
+                        Toast.makeText(this, "¡No existe doctor y cree id!", Toast.LENGTH_SHORT).show();
+                    }
+                    //--------------CONSULTA NUEVO ID MEDICAMENTO---------------------
+                    Cursor fila = baseDeDatos.rawQuery("select idMedicamento from medicamento;",null);
+                    int id=0;
+                    if (fila.moveToLast()){
+                        id=Integer.valueOf(fila.getString(0))+1;
+                    }else{
+                        id=1;
+                    }
+                    //-------------------------ADJUNTA MEDICAMENTO ----------------------------------
+                    registro = new ContentValues();
+                    registro.put("idMedicamento", id);
+                    registro.put("nombre", valor1);
+                    registro.put("padecimiento", valor2);
+                    registro.put("horas", Integer.valueOf(valor6));
+                    registro.put("minutos", Integer.valueOf(valor7));
+                    registro.put("horasRecordatorio", Integer.valueOf(valor8));
+                    registro.put("minutosRecordatorio", Integer.valueOf(valor9));
+                    registro.put("numeroPeriodo", Integer.valueOf(valor10));
+                    registro.put("periodo", valor11);
+                    registro.put("numeroDosis", Integer.valueOf(valor12));
+                    registro.put("dosis", valor13);
+                    registro.put("fotoEnvase", valor14);
+                    Date date = new Date();
+                    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    System.out.println("Fecha: "+dateFormat.format(date));
+                    registro.put("fotoMedicamento", fotoMedicamento+","+dateFormat.format(date));
+                    registro.put("iddoctor", idD);
+                    baseDeDatos.insert("medicamento", null, registro);
+                    baseDeDatos.close();
+                    Toast.makeText(this, "¡Registro exitoso!", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this, "¡No completaste todos los campos, registro fallido!", Toast.LENGTH_SHORT).show();
+                }
             }
-            //------------ALTA-----------------------
             startActivity(intentContinuar);
         }else{
             Toast.makeText(this, "¡No has cargado ninguna imagen!", Toast.LENGTH_SHORT).show();
@@ -246,7 +359,7 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
         TheThis = context;
         String CurrentDateAndTime = getCurrentDateAndTime();
 
-        String imageFileName = "Envase_" + CurrentDateAndTime + "_";
+        String imageFileName = "Medicamento_" + CurrentDateAndTime + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File file = File.createTempFile(
                 imageFileName,  /* prefix */
