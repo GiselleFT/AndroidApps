@@ -15,11 +15,21 @@
         />
 
     <Button
+        android:id="@+id/verCalendario_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:textSize="10sp"
+        android:text="Ver Calendario"
+        />
+
+    <Button
         android:id="@+id/modifica_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:textSize="10sp"
         android:text="Modificar"
         />
@@ -28,8 +38,8 @@
         android:id="@+id/elimina_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:textSize="10sp"
         android:text="Eliminar"
         />

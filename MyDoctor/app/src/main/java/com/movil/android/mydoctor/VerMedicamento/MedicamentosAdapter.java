@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.movil.android.mydoctor.AdminSQLiteOpenHelper;
 import com.movil.android.mydoctor.AgregarMedicamentoActivity;
 import com.movil.android.mydoctor.R;
+import com.movil.android.mydoctor.VerCalendarioActivity;
 import com.movil.android.mydoctor.VerMedicamentosActivity;
 
 import java.io.IOException;
@@ -75,6 +76,16 @@ public class MedicamentosAdapter extends RecyclerView.Adapter<MedicamentosAdapte
                 activity.startActivity(intent);
             }
         });
+        Button botonVerCalendario = viewHolder.botonVerCalendario;
+        botonVerCalendario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity,VerCalendarioActivity.class);
+                intent.putExtra("medicamentoId",String.valueOf(medicamentoModel.getIdMedicamento()));
+                activity.startActivity(intent);
+            }
+        });
+
 
     }
 
@@ -87,13 +98,14 @@ public class MedicamentosAdapter extends RecyclerView.Adapter<MedicamentosAdapte
         public TextView nombreMedicamento;
         public Button botonModificar;
         public Button botonEliminar;
+        public Button botonVerCalendario;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             nombreMedicamento = (TextView) itemView.findViewById(R.id.nombreMedicamento);
             botonModificar = (Button) itemView.findViewById(R.id.modifica_button);
             botonEliminar = (Button) itemView.findViewById(R.id.elimina_button);
-
+            botonVerCalendario = (Button) itemView.findViewById(R.id.verCalendario_button);
         }
     }
 
