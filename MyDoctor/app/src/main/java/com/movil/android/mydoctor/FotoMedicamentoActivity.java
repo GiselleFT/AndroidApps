@@ -36,6 +36,7 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
     Button imagen;
     String fotoMedicamento;
     int banderaFotoCargada = 0;
+    Context contexto = this;
 
 
     @Override
@@ -63,7 +64,7 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
                     }
                     // Continue only if the File was successfully created
                     if (photoFile != null) {
-                        Uri photoURI = FileProvider.getUriForFile(null,
+                        Uri photoURI = FileProvider.getUriForFile(contexto,
                                 "com.example.android.fileprovider",
                                 photoFile);
                         fotoMedicamento = photoFile.getName();// checa esto porque guarda con otros nombres

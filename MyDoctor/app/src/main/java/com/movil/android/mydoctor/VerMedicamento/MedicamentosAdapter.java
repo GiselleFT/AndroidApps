@@ -3,6 +3,7 @@ package com.movil.android.mydoctor.VerMedicamento;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.movil.android.mydoctor.AdminSQLiteOpenHelper;
+import com.movil.android.mydoctor.AgregarMedicamentoActivity;
 import com.movil.android.mydoctor.R;
 import com.movil.android.mydoctor.VerMedicamentosActivity;
 
@@ -61,6 +63,15 @@ public class MedicamentosAdapter extends RecyclerView.Adapter<MedicamentosAdapte
                 AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(activity,"mydoctorBD",null,1);
                 SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
                 int cantidad = baseDeDatos.delete("medicamento","idmedicamento="+medicamentoModel.getIdMedicamento(),null);
+                activity.startActivity(intent);
+            }
+        });
+        Button botonModificar = viewHolder.botonModificar;
+        botonModificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity,AgregarMedicamentoActivity.class);
+                intent.putExtra("medicamentoId",String.valueOf(medicamentoModel.getIdMedicamento()));
                 activity.startActivity(intent);
             }
         });

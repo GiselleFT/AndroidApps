@@ -1,6 +1,8 @@
 package com.movil.android.mydoctor;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +19,8 @@ public class AgregarMedicamentoActivity extends AppCompatActivity {
     public EditText txtDireccionDoctor;
     public EditText txtTelDoctor;
     ArrayList<String> datos=new ArrayList<String>();
+    public int banderaCambio;
+    String idS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +31,27 @@ public class AgregarMedicamentoActivity extends AppCompatActivity {
         txtNombreDoctor = (EditText)findViewById(R.id.txt_nombreDoctor);
         txtDireccionDoctor = (EditText)findViewById(R.id.txt_direccionDoctor);
         txtTelDoctor = (EditText)findViewById(R.id.editTextTelefonoDoctor);
+        idS = getIntent().getStringExtra("medicamentoId");
+        System.out.println("IDS---------------------"+idS);
+        if (idS!=null){
+            AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"mydoctorBD",null,1);
+            SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
+            Cursor medicamento = baseDeDatos.rawQuery("select * from medicamento where idMedicamento = "+idS+";",null);
+            if (medicamento.moveToFirst()){
+                txtNombre.setText(medicamento.getString(1));
+                txtPadecimiento.setText(medicamento.getString(2));
+                String idDoc = medicamento.getString(13);
+                Cursor doctor = baseDeDatos.rawQuery("select * from doctor where iddoctor = "+idDoc+";",null);
+                if (doctor.moveToFirst()){
+                    txtNombreDoctor.setText(doctor.getString(1));
+                    txtDireccionDoctor.setText(doctor.getString(3));
+                    txtTelDoctor.setText(doctor.getString(2));
+                }
+            }
+            banderaCambio=1;
+        }
+
+
     }
 
 
@@ -60,6 +85,9 @@ public class AgregarMedicamentoActivity extends AppCompatActivity {
         intentContinuar.putExtra("nombreDoctor",datos.get(2));
         intentContinuar.putExtra("direccionDoctor",datos.get(3));
         intentContinuar.putExtra("telDoctor",datos.get(4));
+        if (banderaCambio==1){
+            intentContinuar.putExtra("medicamentoId",idS);
+        }
         startActivity(intentContinuar);
     }
 

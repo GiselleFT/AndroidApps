@@ -1,6 +1,8 @@
 package com.movil.android.mydoctor;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +20,8 @@ public class RecordatorioActivity extends AppCompatActivity {
     ArrayList<String> datosS = new ArrayList<String>();
     int hour;
     int min;
+    public int banderaCambio;
+    String idS;
 
 
     @Override
@@ -25,7 +29,7 @@ public class RecordatorioActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recordatorio);
 
-        timePickerRecordatorio = (TimePicker) findViewById(R.id.timePickerRecordatorio);
+        TimePicker timePickerRecordatorio = (TimePicker) findViewById(R.id.timePickerRecordatorio);
         calendar = Calendar.getInstance();
 
         String valor1 = getIntent().getStringExtra("nombre");
@@ -43,9 +47,24 @@ public class RecordatorioActivity extends AppCompatActivity {
         String valor7 = getIntent().getStringExtra("minutos");
         datosS.add(valor7);
 
-        hour = calendar.get(Calendar.HOUR_OF_DAY);
-        min = calendar.get(Calendar.MINUTE);
-        showTime(hour, min);
+        //hour = calendar.get(Calendar.HOUR_OF_DAY);
+        //min = calendar.get(Calendar.MINUTE);
+
+
+        idS = getIntent().getStringExtra("medicamentoId");
+        System.out.println("IDS---------------------"+idS);
+        if (idS!=null){
+            AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"mydoctorBD",null,1);
+            SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
+            Cursor medicamento = baseDeDatos.rawQuery("select * from medicamento where idMedicamento = "+idS+";",null);
+            if (medicamento.moveToFirst()){
+                hour=(Integer.valueOf(medicamento.getString(5)));
+                min=(Integer.valueOf(medicamento.getString(6)));
+                timePickerRecordatorio.setCurrentHour(hour);
+                timePickerRecordatorio.setCurrentMinute(min);
+            }
+            banderaCambio=1;
+        }
 
     }
 
@@ -77,6 +96,10 @@ public class RecordatorioActivity extends AppCompatActivity {
     Muestra activity del periodo que durará el tratamiento*/
     public void continuar(View v) {
         Intent intentContinuar = new Intent(this, PeriodoActivity.class);
+        timePickerRecordatorio = (TimePicker) findViewById(R.id.timePickerRecordatorio);
+        hour = timePickerRecordatorio.getCurrentHour();
+        min = timePickerRecordatorio.getCurrentMinute();
+        showTime(hour, min);
         String hoursRecordatorio = String.valueOf(hour);
         datosS.add(hoursRecordatorio);
         String minRecordatorio = String.valueOf(min);
@@ -90,6 +113,11 @@ public class RecordatorioActivity extends AppCompatActivity {
         intentContinuar.putExtra("minutos",datosS.get(6));
         intentContinuar.putExtra("horasRecordatorio",datosS.get(7));
         intentContinuar.putExtra("minutosRecordatorio",datosS.get(8));
+        System.out.println("horas del reloj --- "+datosS.get(7));
+        System.out.println("minutos del reloj --- "+datosS.get(8));
+        if (banderaCambio==1){
+            intentContinuar.putExtra("medicamentoId",idS);
+        }
         startActivity(intentContinuar);
     }
 

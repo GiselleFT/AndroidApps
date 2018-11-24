@@ -1,6 +1,8 @@
 package com.movil.android.mydoctor;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,12 +16,36 @@ public class DosisActivity extends AppCompatActivity {
     ArrayList<String> datosS = new ArrayList<String>();
     NumberPicker numberPickerDosis;
     Spinner spinnerDosis;
+    public int banderaCambio;
+    String idS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_dosis);
+        numberPickerDosis = (NumberPicker) findViewById(R.id.numberPickerDosis);
+        numberPickerDosis.setMaxValue(800);
+        numberPickerDosis.setMinValue(1);
+        spinnerDosis = (Spinner) findViewById(R.id.spinnerDosis);
+        idS = getIntent().getStringExtra("medicamentoId");
+        System.out.println("IDS---------------------"+idS);
+        if (idS!=null){
+            AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"mydoctorBD",null,1);
+            SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
+            Cursor medicamento = baseDeDatos.rawQuery("select * from medicamento where idMedicamento = "+idS+";",null);
+            if (medicamento.moveToFirst()){
+                numberPickerDosis.setValue(Integer.valueOf(medicamento.getString(9)));
+                int opcion;
+                if (medicamento.getString(8).startsWith("milig")){
+                    opcion=0;
+                }
+                else{
+                    opcion=1;
+                }
+                spinnerDosis.setSelection(opcion);
+            }
+            banderaCambio=1;
+        }
     }
 
     /*Al presionar el boton Aceptar
@@ -76,6 +102,9 @@ public class DosisActivity extends AppCompatActivity {
         intentContinuar.putExtra("periodo",datosS.get(10));
         intentContinuar.putExtra("numeroDosis",datosS.get(11));
         intentContinuar.putExtra("dosis",datosS.get(12));
+        if (banderaCambio==1){
+            intentContinuar.putExtra("medicamentoId",idS);
+        }
         startActivity(intentContinuar);
     }
 

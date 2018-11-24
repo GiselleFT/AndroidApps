@@ -1,6 +1,8 @@
 package com.movil.android.mydoctor;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,12 +16,44 @@ public class PeriodoActivity extends AppCompatActivity{
     ArrayList<String> datosS = new ArrayList<String>();
     NumberPicker numberPickerPeriodo;
     Spinner spinnerPeriodo;
+    public int banderaCambio;
+    String idS;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_periodo);
+        numberPickerPeriodo = (NumberPicker) findViewById(R.id.numberPickerPeriodo);
+        numberPickerPeriodo.setMaxValue(90);
+        numberPickerPeriodo.setMinValue(1);
+        spinnerPeriodo = (Spinner) findViewById(R.id.spinnerPeriodo);
+        idS = getIntent().getStringExtra("medicamentoId");
+        System.out.println("IDS---------------------"+idS);
+        if (idS!=null){
+            AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"mydoctorBD",null,1);
+            SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
+            Cursor medicamento = baseDeDatos.rawQuery("select * from medicamento where idMedicamento = "+idS+";",null);
+            if (medicamento.moveToFirst()){
+                numberPickerPeriodo.setValue(Integer.valueOf(medicamento.getString(7)));
+                int opcion;
+                if (medicamento.getString(8).startsWith("D")){
+                    opcion=0;
+                }
+                else if (medicamento.getString(8).startsWith("S")){
+                    opcion=1;
+                }
+                else if (medicamento.getString(8).startsWith("M")){
+                    opcion=2;
+                }
+                else{
+                    opcion=3;
+                }
+                spinnerPeriodo.setSelection(opcion);
+            }
+            banderaCambio=1;
+        }
+
     }
 
 
@@ -68,6 +102,9 @@ public class PeriodoActivity extends AppCompatActivity{
         intentContinuar.putExtra("minutosRecordatorio",datosS.get(8));
         intentContinuar.putExtra("numeroPeriodo",datosS.get(9));
         intentContinuar.putExtra("periodo",datosS.get(10));
+        if (banderaCambio==1){
+            intentContinuar.putExtra("medicamentoId",idS);
+        }
         startActivity(intentContinuar);
     }
 
