@@ -40,7 +40,7 @@ public class VerMedicamentosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ver_medicamentos);
 
         RecyclerView rvMedicamentos= (RecyclerView) findViewById(R.id.recyclerViewMedicamentos);
-        MedicamentosAdapter adapter = new MedicamentosAdapter(medicamentosList);
+        MedicamentosAdapter adapter = new MedicamentosAdapter(medicamentosList, this);
         rvMedicamentos.setAdapter(adapter);
         rvMedicamentos.setLayoutManager(new LinearLayoutManager(this));
 

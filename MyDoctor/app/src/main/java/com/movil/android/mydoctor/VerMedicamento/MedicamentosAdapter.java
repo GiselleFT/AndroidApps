@@ -1,6 +1,10 @@
 package com.movil.android.mydoctor.VerMedicamento;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,16 +13,21 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.movil.android.mydoctor.AdminSQLiteOpenHelper;
 import com.movil.android.mydoctor.R;
+import com.movil.android.mydoctor.VerMedicamentosActivity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MedicamentosAdapter extends RecyclerView.Adapter<MedicamentosAdapter.ViewHolder> {
 
+    Activity activity;
     ArrayList <MedicamentoModel> medicamentos;
 
-    public MedicamentosAdapter(ArrayList<MedicamentoModel> medicamentos) {
+    public MedicamentosAdapter(ArrayList<MedicamentoModel> medicamentos, Activity activity) {
         this.medicamentos = medicamentos;
+        this.activity = activity;
     }
 
     @Override
@@ -38,12 +47,24 @@ public class MedicamentosAdapter extends RecyclerView.Adapter<MedicamentosAdapte
     @Override
     public void onBindViewHolder(MedicamentosAdapter.ViewHolder viewHolder, int position) {
         // Get the data model based on position
-        MedicamentoModel medicamentoModel = medicamentos.get(position);
+        final MedicamentoModel medicamentoModel = medicamentos.get(position);
 
         // Set item views based on your views and data model
         TextView textView = viewHolder.nombreMedicamento;
         textView.setText(medicamentoModel.getNombre());
         //FALTAN METODOS ONCLICK PARA AMBOS BOTONES
+        Button botonEliminar = viewHolder.botonEliminar;
+        botonEliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity,VerMedicamentosActivity.class);
+                AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(activity,"mydoctorBD",null,1);
+                SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
+                int cantidad = baseDeDatos.delete("medicamento","idmedicamento="+medicamentoModel.getIdMedicamento(),null);
+                activity.startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -61,6 +82,7 @@ public class MedicamentosAdapter extends RecyclerView.Adapter<MedicamentosAdapte
             nombreMedicamento = (TextView) itemView.findViewById(R.id.nombreMedicamento);
             botonModificar = (Button) itemView.findViewById(R.id.modifica_button);
             botonEliminar = (Button) itemView.findViewById(R.id.elimina_button);
+
         }
     }
 
