@@ -1,6 +1,8 @@
 package com.movil.android.mydoctor;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -23,12 +25,37 @@ public class VerCalendarioActivity extends AppCompatActivity {
     CompactCalendarView compactCalendar;
     ListView listView;
     private SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM- yyyy", Locale.getDefault());
+    String idS;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ver_calendario);
+
+        //Aqui recuperamos el id que nos mandan y podemos hacer consultas con él
+
+        idS = getIntent().getStringExtra("medicamentoId");
+        System.out.println("IDS---------------------"+idS);
+        if (idS!=null){
+            AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"myDoctorBD2",null,1);
+            SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
+            Cursor medicamento = baseDeDatos.rawQuery("select * from medicamento where idMedicamento = "+idS+";",null);
+            if (medicamento.moveToFirst()){
+                String todojunto =medicamento.getString(12);
+                String [] todoseparado = todojunto.split(",");
+                String fecha = todoseparado[1];
+                System.out.println("FECHA - - - - - - - "+fecha);
+                //La fecha nos dice qué día se hizo el registro del medicamento y a partir de ahí comienza el tratamiento
+                String numeroPeriodo = medicamento.getString(7);
+                //numeroPeriodo nos indica una cantidad Ejemplo: 1, 2, 3, 4 ...
+                String periodo = medicamento.getString(8);
+                //periodo nos indica si hablamos de años, meses, semanas o dias
+                System.out.println("numeroPeriodo: ---- "+numeroPeriodo+"          periodo"+periodo);
+            }
+        }
+
+
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
