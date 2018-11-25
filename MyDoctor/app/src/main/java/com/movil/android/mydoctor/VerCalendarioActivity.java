@@ -15,7 +15,9 @@ import com.github.sundeepk.compactcalendarview.domain.Event;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,8 +35,16 @@ public class VerCalendarioActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ver_calendario);
 
-        //Aqui recuperamos el id que nos mandan y podemos hacer consultas con él
+        String todojunto = "";
+        String [] todoseparado = null;
+        String fecha = "";
+        String numeroPeriodo = "";
+        String periodo = "";
 
+        //Datos a mostrar en el calendariio
+        String medicamentoData = "";
+
+        //Aqui recuperamos el id que nos mandan y podemos hacer consultas con él
         idS = getIntent().getStringExtra("medicamentoId");
         System.out.println("IDS---------------------"+idS);
         if (idS!=null){
@@ -42,20 +52,25 @@ public class VerCalendarioActivity extends AppCompatActivity {
             SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
             Cursor medicamento = baseDeDatos.rawQuery("select * from medicamento where idMedicamento = "+idS+";",null);
             if (medicamento.moveToFirst()){
-                String todojunto =medicamento.getString(12);
-                String [] todoseparado = todojunto.split(",");
-                String fecha = todoseparado[1];
+                todojunto =medicamento.getString(12);
+                todoseparado = todojunto.split(",");
+                fecha = todoseparado[1];
+                //Suponiendo que el formato fecha = MM/DD/YYYY
                 System.out.println("FECHA - - - - - - - "+fecha);
                 //La fecha nos dice qué día se hizo el registro del medicamento y a partir de ahí comienza el tratamiento
-                String numeroPeriodo = medicamento.getString(7);
+                numeroPeriodo = medicamento.getString(7);
                 //numeroPeriodo nos indica una cantidad Ejemplo: 1, 2, 3, 4 ...
-                String periodo = medicamento.getString(8);
+                periodo = medicamento.getString(8);
                 //periodo nos indica si hablamos de años, meses, semanas o dias
                 System.out.println("numeroPeriodo: ---- "+numeroPeriodo+"          periodo"+periodo);
+                medicamentoData = "Tomar: " + medicamento.getString(1)
+                        + " para: " + medicamento.getString(2)
+                        + " cantidad: " +  medicamento.getString(9) +  medicamento.getString(10)
+                        + " cada: " + medicamento.getString(3)
+                        + " horas con " + medicamento.getString(4) + " minutos" ;
+
             }
         }
-
-
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
@@ -64,18 +79,53 @@ public class VerCalendarioActivity extends AppCompatActivity {
         compactCalendar = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
         compactCalendar.setUseThreeLetterAbbreviation(true);
 
-        //Set an event for Teachers' Professional Day 2016 which is 21st of October
         /*Para generar los timestamp https://www.epochconverter.com/ como ejemplo
          * en esta parte se tienen que recuperar los timestamp y crearlos como eventos y añadirlos al calendario
          * el timestamp esta en milisegundos
          * AQUI SE LLENA EL CALENDARIO CON LOS EVENTOS
          * hacer distincion de medicamentos con un codigo de colores*/
-        Event ev1 = new Event(Color.BLACK, 1541376000000L, "Medicamento 1");
+
+        //Conversion de periodo a numero de días (cuanto dura el tratamiento)
+        int numPeriodo = Integer.parseInt(numeroPeriodo);
+        int factorPeriodo = 0;
+        if(periodo.startsWith("d")){//dias
+            factorPeriodo = numPeriodo;
+        }
+        else if(periodo.startsWith("s")){//semanas
+            factorPeriodo = numPeriodo * 7;
+        }
+        else if(periodo.startsWith("m")){//meses
+            factorPeriodo = numPeriodo * 30;
+        }
+        else{//años
+            factorPeriodo = numPeriodo * 365;
+        }
+
+        //Se convierte la fecha a un tipo Date
+        Date dateToConvert = new Date(fecha);
+        //Se crea un calendario con la fecha actual, para poder iterar la cantidad de dias solicitados
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(dateToConvert);
+        //Se itera el número de dias que dura el tratamiento
+        for (int i = 0; i < factorPeriodo; i++) {
+            //Se obtiene timestamp de cada día
+            Long timestamp = calendar.getTimeInMillis();
+            //Checar si tengo que agregarle la "L" al final de la cantidad
+            //Se crea evento y se añade al calendario
+            Event ev1 = new Event(Color.BLACK, timestamp, medicamentoData);
+            compactCalendar.addEvent(ev1);
+            //Se le agrega incrementa un día al calendario
+            calendar.add(Calendar.DATE, 1);
+        }
+
+
+
+        /*Event ev1 = new Event(Color.BLACK, 1541376000000L, "Medicamento 1");
         Event ev2 = new Event(Color.BLACK, 1541462400000L, "Medicamento 2");
         Event ev3 = new Event(Color.BLACK, 1541534400000L, "Medicamento 3");
         compactCalendar.addEvent(ev1);
         compactCalendar.addEvent(ev2);
-        compactCalendar.addEvent(ev3);
+        compactCalendar.addEvent(ev3);*/
 
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
