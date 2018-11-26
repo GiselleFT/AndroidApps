@@ -70,6 +70,7 @@ public class VerCalendarioActivity extends AppCompatActivity {
                         + " horas con " + medicamento.getString(4) + " minutos" ;
 
             }
+            baseDeDatos.close();
         }
 
         final ActionBar actionBar = getSupportActionBar();
@@ -88,13 +89,13 @@ public class VerCalendarioActivity extends AppCompatActivity {
         //Conversion de periodo a numero de días (cuanto dura el tratamiento)
         int numPeriodo = Integer.parseInt(numeroPeriodo);
         int factorPeriodo = 0;
-        if(periodo.startsWith("d")){//dias
+        if(periodo.startsWith("D")){//dias
             factorPeriodo = numPeriodo;
         }
-        else if(periodo.startsWith("s")){//semanas
+        else if(periodo.startsWith("S")){//semanas
             factorPeriodo = numPeriodo * 7;
         }
-        else if(periodo.startsWith("m")){//meses
+        else if(periodo.startsWith("M")){//meses
             factorPeriodo = numPeriodo * 30;
         }
         else{//años
