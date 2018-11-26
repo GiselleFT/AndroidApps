@@ -35,6 +35,7 @@ public class VerCalendarioActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ver_calendario);
 
+        //Datos a recuperar para registrar en calendario
         String todojunto = "";
         String [] todoseparado = null;
         String fecha = "";
@@ -68,6 +69,7 @@ public class VerCalendarioActivity extends AppCompatActivity {
                         + " cantidad: " +  medicamento.getString(9) +  medicamento.getString(10)
                         + " cada: " + medicamento.getString(3)
                         + " horas con " + medicamento.getString(4) + " minutos" ;
+                System.out.println("Medicamento data: -- " + medicamentoData);
 
             }
             baseDeDatos.close();
@@ -83,8 +85,7 @@ public class VerCalendarioActivity extends AppCompatActivity {
         /*Para generar los timestamp https://www.epochconverter.com/ como ejemplo
          * en esta parte se tienen que recuperar los timestamp y crearlos como eventos y añadirlos al calendario
          * el timestamp esta en milisegundos
-         * AQUI SE LLENA EL CALENDARIO CON LOS EVENTOS
-         * hacer distincion de medicamentos con un codigo de colores*/
+         * AQUI SE LLENA EL CALENDARIO CON LOS EVENTOS*/
 
         //Conversion de periodo a numero de días (cuanto dura el tratamiento)
         int numPeriodo = Integer.parseInt(numeroPeriodo);
@@ -102,18 +103,24 @@ public class VerCalendarioActivity extends AppCompatActivity {
             factorPeriodo = numPeriodo * 365;
         }
 
+        //Se modifica el formato del string fecha "MM/DD/YYYY"
+        String [] infoFecha = fecha.split("/");
+        fecha = infoFecha[1] +"/"+ infoFecha[0] +"/"+ infoFecha[2];
+
         //Se convierte la fecha a un tipo Date
         Date dateToConvert = new Date(fecha);
-        //Se crea un calendario con la fecha actual, para poder iterar la cantidad de dias solicitados
+        //Se crea un calendario con la fecha actual de creacion de medicamento, para poder iterar la cantidad de dias solicitados
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(dateToConvert);
         //Se itera el número de dias que dura el tratamiento
+        Event ev1 = null;
         for (int i = 0; i < factorPeriodo; i++) {
             //Se obtiene timestamp de cada día
             Long timestamp = calendar.getTimeInMillis();
+            System.out.println("Timestamp: ---- " + timestamp);
             //Checar si tengo que agregarle la "L" al final de la cantidad
             //Se crea evento y se añade al calendario
-            Event ev1 = new Event(Color.BLACK, timestamp, medicamentoData);
+            ev1 = new Event(Color.BLACK, timestamp, medicamentoData);
             compactCalendar.addEvent(ev1);
             //Se le agrega incrementa un día al calendario
             calendar.add(Calendar.DATE, 1);
