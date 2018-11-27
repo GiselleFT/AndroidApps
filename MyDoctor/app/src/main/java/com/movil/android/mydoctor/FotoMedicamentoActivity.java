@@ -1,8 +1,12 @@
 package com.movil.android.mydoctor;
 
+import android.Manifest;
+import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -10,9 +14,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -35,6 +45,7 @@ import java.util.Date;
 
 
 public class FotoMedicamentoActivity extends AppCompatActivity {
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_CONTACTS = 0;
     ArrayList<String> datosS = new ArrayList<String>();
     ImageView img;
     Intent intent;
@@ -45,6 +56,10 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
     public int banderaCambio;
     public int tomoFoto;
     String idS;
+    String valor3G,valor5G;
+    //Los valores no deben repetirse
+    private static final int PICK_CONTACT_REQUEST = 99;
+    private static final int READ_CONTACTS_PERMISSION = 100;
 
 
     @Override
@@ -228,7 +243,56 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
                         registro.put("direccion", valor4);
                         baseDeDatos.insert("doctor", null, registro);
                         idD=id2;
+                        //int cantidad = baseDeDatos.delete("medicamento","idmedicamento > 1",null);
+                        //System.out.println("SE BORRARON ESTOS: "+cantidad);
                         //Toast.makeText(this, "¡No existe doctor y cree id!", Toast.LENGTH_SHORT).show();
+                        System.out.println("PASA1");
+                        accederAgendaContactos();
+                        String DisplayName = valor3;
+                        String MobileNumber = valor5;
+
+                        ArrayList < ContentProviderOperation > ops = new ArrayList < ContentProviderOperation > ();
+
+                        ops.add(ContentProviderOperation.newInsert(
+                                ContactsContract.RawContacts.CONTENT_URI)
+                                .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+                                .build());
+
+                        //------------------------------------------------------ Names
+                        if (DisplayName != null) {
+                            ops.add(ContentProviderOperation.newInsert(
+                                    ContactsContract.Data.CONTENT_URI)
+                                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                    .withValue(ContactsContract.Data.MIMETYPE,
+                                            ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                                    .withValue(
+                                            ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
+                                            DisplayName).build());
+                        }
+
+                        //------------------------------------------------------ Mobile Number
+                        if (MobileNumber != null) {
+                            ops.add(ContentProviderOperation.
+                                    newInsert(ContactsContract.Data.CONTENT_URI)
+                                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                    .withValue(ContactsContract.Data.MIMETYPE,
+                                            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, MobileNumber)
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                            ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+                                    .build());
+                        }
+
+
+                        // Asking the Contact provider to create a new contact
+                        try {
+                            getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(this, "Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                     //--------------CONSULTA NUEVO ID MEDICAMENTO---------------------
                     Cursor fila = baseDeDatos.rawQuery("select idMedicamento from medicamento where idMedicamento='"+idS+"';",null);
@@ -267,7 +331,6 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
                     }
                     registro.put("fotoMedicamento", valor15);
                     registro.put("iddoctor", idD);
-                    //registro.put("fechaActual",fila.getString(14));
                     baseDeDatos.update("medicamento",registro,"idMedicamento="+id, null);
                     baseDeDatos.close();
                     Toast.makeText(this, "¡Modificacion exitosa!", Toast.LENGTH_SHORT).show();
@@ -285,7 +348,7 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
                     int idD;
                     if (doctor.moveToFirst()){
                         idD=Integer.valueOf(doctor.getString(0));
-                        Toast.makeText(this, "¡Existe doctor!", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(this, "¡Existe doctor!", Toast.LENGTH_SHORT).show();
                     }else{
                         Cursor fila2 = baseDeDatos.rawQuery("select iddoctor from doctor;",null);
                         int id2;
@@ -301,7 +364,54 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
                         registro.put("direccion", valor4);
                         baseDeDatos.insert("doctor", null, registro);
                         idD=id2;
-                        Toast.makeText(this, "¡No existe doctor y cree id!", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(this, "¡No existe doctor y cree id!", Toast.LENGTH_SHORT).show();
+                        System.out.println("PASA1");
+                        accederAgendaContactos();
+                        String DisplayName = valor3;
+                        String MobileNumber = valor5;
+
+                        ArrayList < ContentProviderOperation > ops = new ArrayList < ContentProviderOperation > ();
+
+                        ops.add(ContentProviderOperation.newInsert(
+                                ContactsContract.RawContacts.CONTENT_URI)
+                                .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+                                .build());
+
+                        //------------------------------------------------------ Names
+                        if (DisplayName != null) {
+                            ops.add(ContentProviderOperation.newInsert(
+                                    ContactsContract.Data.CONTENT_URI)
+                                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                    .withValue(ContactsContract.Data.MIMETYPE,
+                                            ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                                    .withValue(
+                                            ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
+                                            DisplayName).build());
+                        }
+
+                        //------------------------------------------------------ Mobile Number
+                        if (MobileNumber != null) {
+                            ops.add(ContentProviderOperation.
+                                    newInsert(ContactsContract.Data.CONTENT_URI)
+                                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                    .withValue(ContactsContract.Data.MIMETYPE,
+                                            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, MobileNumber)
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                            ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+                                    .build());
+                        }
+
+
+                        // Asking the Contact provider to create a new contact
+                        try {
+                            getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(this, "Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                     //--------------CONSULTA NUEVO ID MEDICAMENTO---------------------
                     Cursor fila = baseDeDatos.rawQuery("select idMedicamento from medicamento;",null);
@@ -415,6 +525,91 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
         Toast.makeText(TheThis, "Imagen guardada en la galería.", Toast.LENGTH_SHORT).show();
     }
 
+
+    private void mostrarExplicacion() {
+        System.out.println("INTENTAAAAA");
+        new AlertDialog.Builder(this)
+                .setTitle("Autorización")
+                .setMessage("Necesito permiso para acceder a los contactos de tu dispositivo.")
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            requestPermissions(new String[]{Manifest.permission.WRITE_CONTACTS}, READ_CONTACTS_PERMISSION);
+                        }
+
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //Mensaje acción cancelada
+                        mensajeAccionCancelada();
+                    }
+                })
+                .show();
+    }
+
+    public void mensajeAccionCancelada(){
+        Toast.makeText(getApplicationContext(),
+                "Haz rechazado la petición, por favor considere en aceptarla.",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        System.out.println("PASA----------");
+        switch (requestCode) {
+            case READ_CONTACTS_PERMISSION:
+                //Si el permiso a sido concedido abrimos la agenda de contactos
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    accederAgendaContactos();
+                } else {
+                    mensajeAccionCancelada();
+                }
+                break;
+        }
+    }
+
+    private void accederAgendaContactos(){
+        //si la API 23 a mas
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            //Habilitar permisos para la version de API 23 a mas
+            System.out.println("PASA2");
+            int verificarPermisoReadContacts = ContextCompat
+                    .checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS);
+            //Verificamos si el permiso no existe
+            if(verificarPermisoReadContacts != PackageManager.PERMISSION_GRANTED){
+                System.out.println("PASA3");
+                //verifico si el usuario a rechazado el permiso anteriormente
+                if(shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CONTACTS)){
+                    System.out.println("PASA4");
+                    //Si a rechazado el permiso anteriormente muestro un mensaje
+                    mostrarExplicacion();
+                }else{
+                    System.out.println("PASA4B");
+                    //De lo contrario carga la ventana para autorizar el permiso
+                    ActivityCompat.requestPermissions( this, new String[]{Manifest.permission.WRITE_CONTACTS}, READ_CONTACTS_PERMISSION);
+                    System.out.println("SALE");
+                }
+
+            }else{
+                System.out.println("PASA3B");
+                //Si el permiso ya fue concedido abrimos en intent de contactos
+                abrirIntentContactos();
+            }
+
+        }else{//Si la API es menor a 23 - abrimos en intent de contactos
+            System.out.println("PASA2B");
+            abrirIntentContactos();
+        }
+    }
+
+    private void abrirIntentContactos(){
+        System.out.println("Solo son pruebas, en teoria ya di permisos desde la configuracion");
+    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar

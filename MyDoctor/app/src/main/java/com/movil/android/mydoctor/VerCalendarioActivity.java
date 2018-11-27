@@ -76,6 +76,7 @@ public class VerCalendarioActivity extends AppCompatActivity {
                 System.out.println("Medicamento data: -- " + medicamentoData);
 
             }
+            baseDeDatos.close();
         }
 
         final ActionBar actionBar = getSupportActionBar();
