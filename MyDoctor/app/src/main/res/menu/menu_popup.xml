@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/ItemAgregarMedicamento"
+        android:title="Agregar Medicamento" />
+
+    <item android:id="@+id/ItemVerMedicamentos"
+        android:title="Ver Medicamentos" />
+
+    <item android:id="@+id/ItemVerFarmacias"
+        android:title="Ver Farmacias" />
+
+</menu>

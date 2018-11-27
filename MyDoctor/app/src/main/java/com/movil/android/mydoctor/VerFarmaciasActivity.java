@@ -15,6 +15,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -308,6 +311,33 @@ public class VerFarmaciasActivity extends FragmentActivity implements OnMapReady
                     }
                 }
             }
+        }
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_popup, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.ItemAgregarMedicamento:
+                Intent intentAltaMedicamento = new Intent(this, AgregarMedicamentoActivity.class);
+                startActivity(intentAltaMedicamento);
+                return true;
+            case R.id.ItemVerMedicamentos:
+                Intent intentVerMedicamentos = new Intent(this, VerMedicamentosActivity.class);
+                startActivity(intentVerMedicamentos);
+                return true;
+            case R.id.ItemVerFarmacias:
+                Intent intentVerFarmacias = new Intent(this, VerFarmaciasActivity.class);
+                startActivity(intentVerFarmacias);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
