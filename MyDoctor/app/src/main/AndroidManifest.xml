@@ -117,6 +117,18 @@
             </intent-filter>
         </activity>
 
+
+        <!--
+        Servicios para notificaciones de medicamentos
+        -->
+        <receiver
+            android:name=".MyAlarmReceiver"
+            android:process=":remote" />
+
+        <service
+            android:name=".MyTestService"
+            android:exported="false" />
+
     </application>
 
 </manifest><!--

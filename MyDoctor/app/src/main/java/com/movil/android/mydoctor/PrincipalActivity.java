@@ -1,10 +1,7 @@
 package com.movil.android.mydoctor;
 
-<<<<<<< HEAD
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-=======
->>>>>>> d5cc2daa4fcb321f129ab2c5f3c33d38198495d9
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -130,6 +127,24 @@ public class PrincipalActivity extends AppCompatActivity {
             }
         });
 
+        /*Se tiene que iniciar con el servicio de notificaciones*/
+        servicio();
+        /*Intent i = new Intent(PrincipalActivity.this, MyService.class);
+        startService(i);*/
+
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //Intent que cada 3 segundos se dispare servicio
+    public void servicio() {
+        System.out.println("Se inicia Servicio en Principal -- " );
+        Intent intent = new Intent(getApplicationContext(), MyAlarmReceiver.class);
+        final PendingIntent pIntent = PendingIntent.getBroadcast(this, MyAlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        long firstMillis = System.currentTimeMillis(); //first run of alarm is immediate // arranca la aplicacion
+        int intervalMillis = 1  * 3 * 1000; //3 segundos
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis, intervalMillis, pIntent);
+        System.out.println("Se termina Servicio en Principal -- " );
     }
 
 
