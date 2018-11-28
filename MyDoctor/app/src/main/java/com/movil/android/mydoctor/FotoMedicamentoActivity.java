@@ -447,10 +447,14 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
                     Toast.makeText(this, "¡No completaste todos los campos, registro fallido!", Toast.LENGTH_SHORT).show();
                 }
             }
+
             startActivity(intentContinuar);
+
         }else{
             Toast.makeText(this, "¡No has cargado ninguna imagen!", Toast.LENGTH_SHORT).show();
         }
+
+
     }
 
 
@@ -461,6 +465,8 @@ public class FotoMedicamentoActivity extends AppCompatActivity {
         Intent intentCancelar = new Intent(this, PrincipalActivity.class);
         startActivity(intentCancelar);
     }
+
+
 
 
     //-----------------------------------------------------------------------------------------------------------------------------
