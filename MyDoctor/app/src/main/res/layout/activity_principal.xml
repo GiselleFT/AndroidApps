@@ -11,9 +11,10 @@
         android:id="@+id/buttonAgregarMedicamento"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="65dp"
+        android:layout_marginTop="9dp"
         android:onClick="agregarMedicamento"
         android:text="Agregar Medicamento"
+        app:layout_constraintBottom_toTopOf="@+id/buttonVerMedicamentos"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,25 +23,39 @@
         android:id="@+id/buttonVerMedicamentos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="146dp"
-        android:layout_marginBottom="144dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginBottom="6dp"
         android:onClick="verMedicamentos"
         android:text="Ver Medicamentos"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonVerFarmacias"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/buttonAgregarMedicamento" />
+        app:layout_constraintBottom_toTopOf="@+id/buttonVerFarmacias"
+        app:layout_constraintStart_toStartOf="@+id/buttonAgregarMedicamento"
+        app:layout_constraintTop_toBottomOf="@+id/buttonAgregarMedicamento" />
 
     <Button
         android:id="@+id/buttonVerFarmacias"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="108dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="7dp"
         android:onClick="verFarmacias"
         android:text="Ver Farmacias"
+        app:layout_constraintBottom_toTopOf="@+id/buttonOneDrive"
+        app:layout_constraintEnd_toEndOf="@+id/buttonVerMedicamentos"
+        app:layout_constraintTop_toBottomOf="@+id/buttonVerMedicamentos" />
+
+    <Button
+        android:id="@+id/buttonOneDrive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginLeft="21dp"
+        android:layout_marginBottom="17dp"
+        android:text="Respaldar en OneDrive"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/buttonVerFarmacias"
+        app:layout_constraintTop_toBottomOf="@+id/buttonVerFarmacias" />
 
 
 </android.support.constraint.ConstraintLayout>

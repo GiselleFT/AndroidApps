@@ -27,6 +27,8 @@ public class VerMedicamentosActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"myDoctorBD2",null,1);
+        //admin.onUpgrade(admin.getReadableDatabase(),1,1);
+        //ESTA LINEA DE CÓDIGO SIRVE PARA RESETEAR LA BASE DE DATOS
         SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
         Cursor medicamentos = baseDeDatos.rawQuery("select * from medicamento ;",null);
         if (medicamentos.moveToFirst()) {
