@@ -171,7 +171,7 @@ public class MyAlarmReceiver extends BroadcastReceiver {
 
                 alarma="ID1";
                 titulo=nombreMedicamento;
-                descripcion ="Tomar: " + numerodosisMedicamento + " " + dosisMedicamento + " " + fotoEnvaseMedicamento;
+                descripcion ="Tomar: " + numerodosisMedicamento + " " + dosisMedicamento;
                 triggerNotification(context,titulo+"\n"+descripcion, fotoEnvaseMedicamento);
 
 
@@ -195,19 +195,20 @@ public class MyAlarmReceiver extends BroadcastReceiver {
 
         Bitmap image = BitmapFactory.decodeFile((new File("/storage/emulated/0/Android/data/com.movil.android.mydoctor/files/Pictures/"+fotoEnvaseMedicamento)).getAbsolutePath());
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(contexto);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(contexto, CHANNEL_ID);
         builder.setContentIntent(contentIntent)
                 .setTicker("" )
                 .setContentTitle("Recordatorio")
                 .setContentText(t)
-                .setLargeIcon(BitmapFactory.decodeResource(contexto.getResources(), R.drawable.ic_notificacion))
+                .setLargeIcon(image)
                 .setSmallIcon(R.drawable.ic_notificacion)
                 .setAutoCancel(true) //Cuando se pulsa la notificación ésta desaparece
                 .setSound(defaultSound)
                 .setVibrate(pattern)
                 .setChannelId(CHANNEL_ID)
                 .setStyle(new NotificationCompat.BigPictureStyle()
-                .bigPicture(image)).build();//agregué esto
+                .bigPicture(image).bigLargeIcon(null))
+                .build();//agregué esto
 
         Notification notificacion = new NotificationCompat.BigTextStyle(builder.setContentIntent(contentIntent))
                 .bigText(t)
