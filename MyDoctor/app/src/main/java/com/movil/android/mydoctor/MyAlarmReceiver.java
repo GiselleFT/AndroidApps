@@ -1,6 +1,7 @@
 package com.movil.android.mydoctor;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -18,6 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import static android.provider.Settings.System.getString;
 
 public class MyAlarmReceiver extends BroadcastReceiver {
     public static final int REQUEST_CODE = 12345;
@@ -72,7 +75,7 @@ public class MyAlarmReceiver extends BroadcastReceiver {
         while(medicamento.moveToNext()){
             //Se convierte la fechaSistema a un tipo Date
             Date dateFechaSistema = new Date(fechaSistema);
-
+            Log.i("MyTestService", "Entra a while: -- ");
             //-----Primero se calcula la última fechaIncompleta en que termina el tratamiento
             todoJunto = medicamento.getString(12);
             todoSeparado = todoJunto.split(",");
@@ -132,6 +135,8 @@ public class MyAlarmReceiver extends BroadcastReceiver {
 
                 //Mientras que no haya cambiado de dia y no se haya encontrado un recordatorio
                 while(diaFechaCompletaRegistro == calendarioCompleto.getTime().getDate() && esHora==false){
+                    //Log.i("MyTestService", "dateFechaCompletaSistema: -- " + dateFechaCompletaSistema);
+                    //Log.i("MyTestService", "dateFechaCompletaRegistro: -- " + dateFechaCompletaRegistro);
                     if(dateFechaCompletaSistema.compareTo(dateFechaCompletaRegistro) == 0){
                         esHora = true;
                         break;
@@ -140,6 +145,7 @@ public class MyAlarmReceiver extends BroadcastReceiver {
                         esHora = false;
                         //Se incrementa el numero de minutos
                         calendarioCompleto.add(Calendar.MINUTE, totalMinutos);
+                        dateFechaCompletaRegistro = calendarioCompleto.getTime();
                     }
                 }
             }
@@ -147,6 +153,8 @@ public class MyAlarmReceiver extends BroadcastReceiver {
                 esHoy = false;
             }
 
+            Log.i("MyTestService", "esHoy: -- " + esHoy);
+            Log.i("MyTestService", "esHora: -- " + esHora);
             //Si ambas banderas son true es momento de notificar
             if(esHoy && esHora){
                 Log.i("MyTestService", "Es momento de notificar: -- ");
@@ -168,6 +176,11 @@ public class MyAlarmReceiver extends BroadcastReceiver {
     }
 
     private void triggerNotification(Context contexto, String t) {
+        /*String CHANNEL_ID = "my_channel_01";// The id of the channel.
+        String CHANNEL_NAME = "my_channel_name";// The id of the channel.
+        int importance = NotificationManager.IMPORTANCE_HIGH;//agregue esto
+        NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance);//agregue esto
+        */
         Intent notificationIntent = new Intent(contexto, VerMedicamentosActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(contexto, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -183,7 +196,8 @@ public class MyAlarmReceiver extends BroadcastReceiver {
                 .setSmallIcon(R.drawable.ic_notificacion)
                 .setAutoCancel(true) //Cuando se pulsa la notificación ésta desaparece
                 .setSound(defaultSound)
-                .setVibrate(pattern);
+                .setVibrate(pattern)
+                /*.setChannelId(CHANNEL_ID).build()*/;//agregué esto
 
         Notification notificacion = new NotificationCompat.BigTextStyle(builder.setContentIntent(contentIntent))
                 .bigText(t)
@@ -192,6 +206,7 @@ public class MyAlarmReceiver extends BroadcastReceiver {
                 .build();
 
         notificationManager = (NotificationManager) contexto.getSystemService(Context.NOTIFICATION_SERVICE);
+        //notificationManager.createNotificationChannel(mChannel);//agregue esto
         notificationManager.notify(NOTIFICATION_ID, notificacion);
     }
 
