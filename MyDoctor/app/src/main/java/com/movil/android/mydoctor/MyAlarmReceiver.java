@@ -12,6 +12,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -32,6 +34,7 @@ public class MyAlarmReceiver extends BroadcastReceiver {
     private String alarma,descripcion,titulo;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i("MyTestService", "MyAlarmReceiver metodo onReceive");
@@ -175,12 +178,13 @@ public class MyAlarmReceiver extends BroadcastReceiver {
         bd.close();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void triggerNotification(Context contexto, String t) {
-        /*String CHANNEL_ID = "my_channel_01";// The id of the channel.
+        String CHANNEL_ID = "my_channel_01";// The id of the channel.
         String CHANNEL_NAME = "my_channel_name";// The id of the channel.
         int importance = NotificationManager.IMPORTANCE_HIGH;//agregue esto
         NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance);//agregue esto
-        */
+
         Intent notificationIntent = new Intent(contexto, VerMedicamentosActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(contexto, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -197,7 +201,7 @@ public class MyAlarmReceiver extends BroadcastReceiver {
                 .setAutoCancel(true) //Cuando se pulsa la notificación ésta desaparece
                 .setSound(defaultSound)
                 .setVibrate(pattern)
-                /*.setChannelId(CHANNEL_ID).build()*/;//agregué esto
+                .setChannelId(CHANNEL_ID).build();//agregué esto
 
         Notification notificacion = new NotificationCompat.BigTextStyle(builder.setContentIntent(contentIntent))
                 .bigText(t)
@@ -206,7 +210,7 @@ public class MyAlarmReceiver extends BroadcastReceiver {
                 .build();
 
         notificationManager = (NotificationManager) contexto.getSystemService(Context.NOTIFICATION_SERVICE);
-        //notificationManager.createNotificationChannel(mChannel);//agregue esto
+        notificationManager.createNotificationChannel(mChannel);//agregue esto
         notificationManager.notify(NOTIFICATION_ID, notificacion);
     }
 
