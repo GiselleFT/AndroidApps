@@ -2,6 +2,7 @@ package com.movil.android.mydoctor;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -55,6 +56,33 @@ public class PrincipalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
+
+        //GIS DESCOMENTA ESTO
+        /*AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"myDoctorBD2",null,1);
+        SQLiteDatabase baseDeDatos = admin.getReadableDatabase();
+        ContentValues registro = new ContentValues();
+        registro.put("iddoctor", 100);//DOCTOR
+        registro.put("nombre", "Gis");
+        registro.put("telefono", "5512345678");
+        registro.put("direccion", "Escom");
+        baseDeDatos.insert("doctor", null, registro);
+        registro = new ContentValues();
+        registro.put("idMedicamento", 100);
+        registro.put("nombre", "vitacilina");
+        registro.put("padecimiento", "dolor");
+        registro.put("horas", 0);
+        registro.put("minutos", 2);//minutos del recordatorrio
+        registro.put("horasRecordatorio", 20);
+        registro.put("minutosRecordatorio", 0);
+        registro.put("numeroPeriodo", 2);
+        registro.put("periodo", "Día(s)");
+        registro.put("numeroDosis", 2);
+        registro.put("dosis", "miligramos");
+        registro.put("fotoEnvase", "Envase_20181128_183608_4785902127191106960.jpg");
+        registro.put("fotoMedicamento", "Medicamento_20181128_183618_7979042185458162380.jpg,28/11/2018");
+        registro.put("iddoctor", 100);
+        baseDeDatos.update("medicamento",registro,"idMedicamento="+id, null);
+        baseDeDatos.close();*/
 
         if (!tokenExists()) {
             //No token
@@ -119,7 +147,7 @@ public class PrincipalActivity extends AppCompatActivity {
                 //-------------------EXCEL----------------------------
 
                 //-------------------EXCEL----------------------------
-                File file = saveExcelFile(context, "primerExcel1.xls", doctoresList, medicamentosList);
+                File file = saveExcelFile(context, "RespaldoMyDoctor.xls", doctoresList, medicamentosList);
                 if (file != null) {
                     //Initialize UploadTask
                     new UploadTask(DropboxClient.getClient(ACCESS_TOKEN), file, getApplicationContext()).execute();

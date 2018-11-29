@@ -46,6 +46,6 @@ public class UploadTask extends AsyncTask {
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
-        Toast.makeText(context, "Image uploaded successfully", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Respaldo Exitoso!!", Toast.LENGTH_SHORT).show();
     }
 }
