@@ -81,8 +81,9 @@ public class PrincipalActivity extends AppCompatActivity {
         registro.put("fotoEnvase", "Envase_20181128_183608_4785902127191106960.jpg");
         registro.put("fotoMedicamento", "Medicamento_20181128_183618_7979042185458162380.jpg,28/11/2018");
         registro.put("iddoctor", 100);
-        baseDeDatos.update("medicamento",registro,"idMedicamento="+id, null);
-        baseDeDatos.close();*/
+        baseDeDatos.insert("medicamento", null, registro);
+        baseDeDatos.close();
+        */
 
         if (!tokenExists()) {
             //No token
