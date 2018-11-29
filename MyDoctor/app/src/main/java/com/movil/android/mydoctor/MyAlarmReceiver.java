@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -170,7 +172,7 @@ public class MyAlarmReceiver extends BroadcastReceiver {
                 alarma="ID1";
                 titulo=nombreMedicamento;
                 descripcion ="Tomar: " + numerodosisMedicamento + " " + dosisMedicamento + " " + fotoEnvaseMedicamento;
-                triggerNotification(context,titulo+"\n"+descripcion);
+                triggerNotification(context,titulo+"\n"+descripcion, fotoEnvaseMedicamento);
 
 
             }
@@ -179,7 +181,7 @@ public class MyAlarmReceiver extends BroadcastReceiver {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void triggerNotification(Context contexto, String t) {
+    private void triggerNotification(Context contexto, String t, String fotoEnvaseMedicamento) {
         String CHANNEL_ID = "my_channel_01";// The id of the channel.
         String CHANNEL_NAME = "my_channel_name";// The id of the channel.
         int importance = NotificationManager.IMPORTANCE_HIGH;//agregue esto
@@ -191,6 +193,8 @@ public class MyAlarmReceiver extends BroadcastReceiver {
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         long[] pattern = new long[]{2000, 1000, 2000};
 
+        Bitmap image = BitmapFactory.decodeFile((new File("/storage/emulated/0/Android/data/com.movil.android.mydoctor/files/Pictures/"+fotoEnvaseMedicamento)).getAbsolutePath());
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(contexto);
         builder.setContentIntent(contentIntent)
                 .setTicker("" )
@@ -201,7 +205,9 @@ public class MyAlarmReceiver extends BroadcastReceiver {
                 .setAutoCancel(true) //Cuando se pulsa la notificación ésta desaparece
                 .setSound(defaultSound)
                 .setVibrate(pattern)
-                .setChannelId(CHANNEL_ID).build();//agregué esto
+                .setChannelId(CHANNEL_ID)
+                .setStyle(new NotificationCompat.BigPictureStyle()
+                .bigPicture(image)).build();//agregué esto
 
         Notification notificacion = new NotificationCompat.BigTextStyle(builder.setContentIntent(contentIntent))
                 .bigText(t)
