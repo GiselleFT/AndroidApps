@@ -28,7 +28,6 @@
         app:layout_constraintTop_toBottomOf="@+id/recyclerViewMedicamentos"
         android:onClick="cancelar"
         android:text="Volver"
-
         />
 
 </android.support.constraint.ConstraintLayout>

@@ -19,7 +19,7 @@
         android:id="@+id/buttonTomarFoto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tomar Foto" />
+        android:text="Tomar Foto de Medicamento" />
 
     <Button
         android:id="@+id/buttonContinuar"

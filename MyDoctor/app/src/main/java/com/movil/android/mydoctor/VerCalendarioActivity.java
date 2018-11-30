@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -191,5 +192,10 @@ public class VerCalendarioActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void cancelar(View v) {
+        Intent intentCancelar = new Intent(this, PrincipalActivity.class);
+        startActivity(intentCancelar);
     }
 }
