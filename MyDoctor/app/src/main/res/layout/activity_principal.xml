@@ -12,7 +12,7 @@
         android:layout_width="89dp"
         android:layout_height="89dp"
         android:layout_marginTop="58dp"
-        android:layout_marginBottom="51dp"
+        android:layout_marginBottom="50dp"
         android:background="@drawable/animabotonagregar"
         android:onClick="agregarMedicamento"
         app:layout_constraintBottom_toTopOf="@+id/buttonVerMedicamentos"
@@ -22,9 +22,10 @@
 
     <Button
         android:id="@+id/buttonVerMedicamentos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="127dp"
+        android:layout_height="46dp"
         android:layout_marginBottom="55dp"
+        android:background="#64D20F"
         android:onClick="verMedicamentos"
         android:text="Ver Medicamentos"
         app:layout_constraintBottom_toTopOf="@+id/buttonVerFarmacias"
@@ -34,22 +35,23 @@
 
     <Button
         android:id="@+id/buttonVerFarmacias"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_width="127dp"
+        android:layout_height="46dp"
         android:layout_marginBottom="53dp"
+        android:background="#F6A000"
         android:onClick="verFarmacias"
         android:text="Ver Farmacias"
         app:layout_constraintBottom_toTopOf="@+id/buttonOneDrive"
-        app:layout_constraintStart_toStartOf="@+id/buttonOneDrive"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonVerMedicamentos" />
 
     <Button
         android:id="@+id/buttonOneDrive"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="69dp"
+        android:layout_width="164dp"
+        android:layout_height="46dp"
+        android:layout_marginBottom="68dp"
+        android:background="#00F6F6"
         android:text="Respaldar en OneDrive"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
